@@ -60,6 +60,8 @@ class AdSenseCommand extends Command
             ->generate($account->name, $optParams)
             ->toSimpleObject();
 
+        $reports = json_decode(json_encode($reports), true);
+
         Notification::route('mail', [config('mail.to.address') => config('mail.to.name')])
             ->notify(new AdSenseNotification($reports));
 

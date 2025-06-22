@@ -14,7 +14,7 @@ class AdSenseNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(protected object $reports)
+    public function __construct(protected array $reports)
     {
         //
     }
@@ -39,10 +39,10 @@ class AdSenseNotification extends Notification
         $totalClicks = $this->getMetricValue('CLICKS');
         $totalCpc = $this->getMetricValue('COST_PER_CLICK');
 
-        $avgEarnings = $this->getMetricValue('ESTIMATED_EARNINGS', $this->reports->averages);
-        $avgPageViews = $this->getMetricValue('PAGE_VIEWS', $this->reports->averages);
-        $avgClicks = $this->getMetricValue('CLICKS', $this->reports->averages);
-        $avgCpc = $this->getMetricValue('COST_PER_CLICK', $this->reports->averages);
+        $avgEarnings = $this->getMetricValue('ESTIMATED_EARNINGS', $this->reports['averages']);
+        $avgPageViews = $this->getMetricValue('PAGE_VIEWS', $this->reports['averages']);
+        $avgClicks = $this->getMetricValue('CLICKS', $this->reports['averages']);
+        $avgCpc = $this->getMetricValue('COST_PER_CLICK', $this->reports['averages']);
 
         $mailMessage = (new MailMessage)
             ->subject('AdSense レポート（7日間）')
@@ -62,10 +62,10 @@ class AdSenseNotification extends Notification
             ->line('CPC: ¥'.number_format($avgCpc))
             ->line('');
 
-        if (isset($this->reports->rows) && count($this->reports->rows) > 0) {
+        if (isset($this->reports['rows']) && count($this->reports['rows']) > 0) {
             $mailMessage->line('**日別詳細**');
-            foreach ($this->reports->rows as $row) {
-                $date = $row->cells[0]->value ?? 'N/A';
+            foreach ($this->reports['rows'] as $row) {
+                $date = $row['cells'][0]['value'] ?? 'N/A';
                 $pageViews = $this->getMetricValue('PAGE_VIEWS', $row);
                 $clicks = $this->getMetricValue('CLICKS', $row);
                 $cpc = $this->getMetricValue('COST_PER_CLICK', $row);
@@ -82,7 +82,7 @@ class AdSenseNotification extends Notification
     /**
      * Get metric value by name from data source
      */
-    private function getMetricValue(string $metricName, ?object $dataSource = null): float
+    private function getMetricValue(string $metricName, ?array $dataSource = null): float
     {
         $metrics = config('ads.metrics');
         $index = array_search($metricName, $metrics);
@@ -91,9 +91,10 @@ class AdSenseNotification extends Notification
             return 0;
         }
 
-        $dataSource = $dataSource ?? $this->reports->totals;
+        $dataSource = $dataSource ?? $this->reports['totals'];
+        $value = $dataSource['cells'][$index + 1]['value'] ?? 0;
 
-        return $dataSource->cells[$index]->value ?? 0;
+        return (float) $value;
     }
 
     /**
