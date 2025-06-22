@@ -3,6 +3,16 @@
 
 Here's your monthly AdSense report.
 
+## 📈 Key Metrics
+
+<x-mail::table>
+| Period | Earnings |
+|:-------|-------:|
+| **Today** | **${{ number_format($keyMetrics['today'] ?? 0, 2) }}** |
+| **Yesterday** | **${{ number_format($keyMetrics['yesterday'] ?? 0, 2) }}** |
+| **This Month** | **${{ number_format($keyMetrics['thisMonth'] ?? 0, 2) }}** |
+</x-mail::table>
+
 ## Total Performance
 
 **Earnings:** ${{ number_format($totalMetrics['earnings'], 2) }}  

@@ -78,9 +78,15 @@ class AdSenseNotificationTest extends TestCase
 
         // Check that view data contains expected values
         $viewData = $mailMessage->viewData;
+        $this->assertArrayHasKey('keyMetrics', $viewData);
         $this->assertArrayHasKey('totalMetrics', $viewData);
         $this->assertArrayHasKey('averageMetrics', $viewData);
         $this->assertArrayHasKey('recentDays', $viewData);
+
+        // Check key metrics structure
+        $this->assertArrayHasKey('today', $viewData['keyMetrics']);
+        $this->assertArrayHasKey('yesterday', $viewData['keyMetrics']);
+        $this->assertArrayHasKey('thisMonth', $viewData['keyMetrics']);
 
         // Check total metrics
         $this->assertEquals(125.0, $viewData['totalMetrics']['earnings']);
@@ -122,6 +128,10 @@ class AdSenseNotificationTest extends TestCase
         $this->assertInstanceOf(MailMessage::class, $mailMessage);
         $this->assertEquals('AdSense Report (This Month)', $mailMessage->subject);
         $this->assertEquals('mail.en.adsense-report', $mailMessage->markdown);
+
+        // Check that keyMetrics is included in view data
+        $viewData = $mailMessage->viewData;
+        $this->assertArrayHasKey('keyMetrics', $viewData);
     }
 
     public function test_get_metric_value_returns_correct_values(): void
@@ -183,6 +193,40 @@ class AdSenseNotificationTest extends TestCase
 
         $this->assertEquals(500.0, $method->invoke($notification, 'PAGE_VIEWS', $customDataSource));
         $this->assertEquals(25.0, $method->invoke($notification, 'CLICKS', $customDataSource));
+    }
+
+    public function test_find_earnings_by_date(): void
+    {
+        $rows = [
+            [
+                'cells' => [
+                    ['value' => '2023-12-01'],
+                    ['value' => '150'],
+                    ['value' => '8'],
+                    ['value' => '2.5'],
+                    ['value' => '20.0'],
+                ],
+            ],
+            [
+                'cells' => [
+                    ['value' => '2023-12-02'],
+                    ['value' => '200'],
+                    ['value' => '10'],
+                    ['value' => '3.0'],
+                    ['value' => '30.0'],
+                ],
+            ],
+        ];
+
+        $notification = new AdSenseNotification(['rows' => $rows]);
+
+        $reflection = new \ReflectionClass($notification);
+        $method = $reflection->getMethod('findEarningsByDate');
+        $method->setAccessible(true);
+
+        $this->assertEquals(20.0, $method->invoke($notification, $rows, '2023-12-01'));
+        $this->assertEquals(30.0, $method->invoke($notification, $rows, '2023-12-02'));
+        $this->assertEquals(0.0, $method->invoke($notification, $rows, '2023-12-03'));
     }
 
     public function test_via_returns_mail_channel(): void

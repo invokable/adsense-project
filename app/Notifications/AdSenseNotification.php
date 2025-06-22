@@ -52,6 +52,14 @@ class AdSenseNotification extends Notification
             'cpc' => $this->getMetricValue('COST_PER_CLICK', $this->reports['averages']),
         ];
 
+        // Get key daily metrics
+        $rows = $this->reports['rows'] ?? [];
+        $keyMetrics = [
+            'today' => $this->findEarningsByDate($rows, now()->format('Y-m-d')),
+            'yesterday' => $this->findEarningsByDate($rows, now()->subDay()->format('Y-m-d')),
+            'thisMonth' => $totalMetrics['earnings'],
+        ];
+
         $recentDays = [];
         if (isset($this->reports['rows']) && count($this->reports['rows']) > 0) {
             $recentRows = array_slice($this->reports['rows'], 0, 7);
@@ -69,6 +77,7 @@ class AdSenseNotification extends Notification
         return (new MailMessage)
             ->subject($subject)
             ->markdown($template, [
+                'keyMetrics' => $keyMetrics,
                 'totalMetrics' => $totalMetrics,
                 'averageMetrics' => $averageMetrics,
                 'recentDays' => $recentDays,
@@ -92,6 +101,21 @@ class AdSenseNotification extends Notification
         $value = $dataSource['cells'][$index + 1]['value'] ?? 0;
 
         return (float) $value;
+    }
+
+    /**
+     * Find earnings by date from rows data
+     */
+    private function findEarningsByDate(array $rows, string $targetDate): float
+    {
+        foreach ($rows as $row) {
+            $date = $row['cells'][0]['value'] ?? '';
+            if ($date === $targetDate) {
+                return $this->getMetricValue('ESTIMATED_EARNINGS', $row);
+            }
+        }
+
+        return 0.0;
     }
 
     /**
