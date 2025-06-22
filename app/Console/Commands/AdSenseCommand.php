@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Notifications\AdSenseNotification;
+use Google\Service\Adsense;
 use Google\Service\Adsense\Account;
 use Google\Service\Adsense\ListAccountsResponse;
 use Illuminate\Console\Command;
@@ -41,9 +42,9 @@ class AdSenseCommand extends Command
 
         Google::fetchAccessTokenWithRefreshToken();
 
+        /** @var Adsense $ads */
         $ads = Google::make('Adsense');
 
-        /** @var ListAccountsResponse $accounts */
         $accounts = $ads->accounts->listAccounts();
 
         /** @var Account $account */
