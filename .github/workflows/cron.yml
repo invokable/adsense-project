@@ -45,3 +45,4 @@ jobs:
           GOOGLE_REDIRECT: ${{ secrets.GOOGLE_REDIRECT }}
           ADS_ACCESS_TOKEN: ${{ secrets.ADS_ACCESS_TOKEN }}
           ADS_REFRESH_TOKEN: ${{ secrets.ADS_REFRESH_TOKEN }}
+          APP_LOCALE: ${{ secrets.APP_LOCALE }}
