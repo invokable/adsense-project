@@ -264,6 +264,7 @@ ADS_REFRESH_TOKEN=...refresh-token...
 These tokens can now be used by your application or script to make authorized requests to the AdSense API. The access
 token will expire, but you can use the refresh token to obtain a new one programmatically.
 
+`GOOGLE_REDIRECT` can be anything, so just set it as you like.
 ---
 
 ### 🔒 Tips
