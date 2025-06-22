@@ -53,7 +53,7 @@ class AdSenseCommand extends Command
             'metrics' => config('ads.metrics'),
             'dimensions' => 'DATE',
             'orderBy' => '-DATE',
-            'dateRange' => 'LAST_7_DAYS',
+            'dateRange' => 'MONTH_TO_DATE',
         ];
 
         $reports = $ads->accounts_reports

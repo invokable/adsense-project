@@ -45,9 +45,9 @@ class AdSenseNotification extends Notification
         $avgCpc = $this->getMetricValue('COST_PER_CLICK', $this->reports['averages']);
 
         $mailMessage = (new MailMessage)
-            ->subject('AdSense レポート（7日間）')
+            ->subject('AdSense レポート（今月）')
             ->greeting('AdSense レポート')
-            ->line('過去7日間のAdSenseレポートをお送りします。')
+            ->line('今月のAdSenseレポートをお送りします。')
             ->line('')
             ->line('**合計実績**')
             ->line('収益: ¥'.number_format($totalEarnings))
@@ -63,8 +63,9 @@ class AdSenseNotification extends Notification
             ->line('');
 
         if (isset($this->reports['rows']) && count($this->reports['rows']) > 0) {
-            $mailMessage->line('**日別詳細**');
-            foreach ($this->reports['rows'] as $row) {
+            $mailMessage->line('**日別詳細（直近7日）**');
+            $recentRows = array_slice($this->reports['rows'], 0, 7);
+            foreach ($recentRows as $row) {
                 $date = $row['cells'][0]['value'] ?? 'N/A';
                 $pageViews = $this->getMetricValue('PAGE_VIEWS', $row);
                 $clicks = $this->getMetricValue('CLICKS', $row);
