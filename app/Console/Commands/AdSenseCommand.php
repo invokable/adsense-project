@@ -50,26 +50,17 @@ class AdSenseCommand extends Command
         $account = head($accounts->getAccounts());
 
         $optParams = [
-            'metrics' => [
-                'PAGE_VIEWS',
-                //                'AD_REQUESTS',
-                //                'AD_REQUESTS_COVERAGE',
-                'CLICKS',
-                //                'AD_REQUESTS_CTR',
-                'COST_PER_CLICK',
-                //                'AD_REQUESTS_RPM',
-                'ESTIMATED_EARNINGS',
-            ],
+            'metrics' => config('ads.metrics'),
             'dimensions' => 'DATE',
             'orderBy' => '+DATE',
-            'dateRange' => 'YESTERDAY',
+            'dateRange' => 'LAST_7_DAYS',
         ];
 
         $reports = $ads->accounts_reports
             ->generate($account->name, $optParams)
             ->toSimpleObject();
 
-        Notification::route('main', [config('mail.to.address') => config('mail.to.name')])
+        Notification::route('mail', [config('mail.to.address') => config('mail.to.name')])
             ->notify(new AdSenseNotification($reports));
 
         return 0;
