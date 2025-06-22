@@ -5,11 +5,13 @@ Here's your monthly AdSense report.
 
 ## 📈 Key Metrics
 
+<x-mail::panel>
 <x-mail::table>
 | **Today** | **Yesterday** | **This Month** |
 |:---------:|:-------------:|:--------------:|
 | **${{ number_format($keyMetrics['today'] ?? 0, 2) }}** | **${{ number_format($keyMetrics['yesterday'] ?? 0, 2) }}** | **${{ number_format($keyMetrics['thisMonth'] ?? 0, 2) }}** |
 </x-mail::table>
+</x-mail::panel>
 
 ## Total Performance
 

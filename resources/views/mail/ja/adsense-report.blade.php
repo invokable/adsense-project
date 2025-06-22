@@ -5,11 +5,13 @@
 
 ## 📈 重要指標
 
+<x-mail::panel>
 <x-mail::table>
 | **本日** | **昨日** | **今月** |
 |:--------:|:--------:|:--------:|
 | **¥{{ number_format($keyMetrics['today'] ?? 0) }}** | **¥{{ number_format($keyMetrics['yesterday'] ?? 0) }}** | **¥{{ number_format($keyMetrics['thisMonth'] ?? 0) }}** |
 </x-mail::table>
+</x-mail::panel>
 
 ## 合計実績
 
