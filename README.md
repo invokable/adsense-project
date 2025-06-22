@@ -265,3 +265,6 @@ These tokens can now be used by your application or script to make authorized re
 ### 🎉 Done!
 
 You now have full access to the AdSense API with long-term credentials, without needing to run a web server. Use the stored tokens to authenticate your scripts or apps easily.
+
+## LICENSE
+MIT License
