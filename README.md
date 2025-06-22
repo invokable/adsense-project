@@ -147,7 +147,7 @@ Customize reported metrics in `config/ads.php`:
 
 ## How to Obtain AdSense API Access & Refresh Tokens Using `oauth2l` (No Web Server Required)
 
-This guide walks you through the complete process to obtain AdSense Management API access and refresh tokens without
+This guide walks you through the complete process to get AdSense Management API access and refresh tokens without
 running a web server.
 
 ### Why This Setup Is Required
@@ -262,9 +262,9 @@ ADS_REFRESH_TOKEN=...refresh-token...
 ```
 
 These tokens can now be used by your application or script to make authorized requests to the AdSense API. The access
-token will expire, but you can use the refresh token to obtain a new one programmatically.
+token will expire, but you can use the refresh token to get a new one programmatically.
 
-`GOOGLE_REDIRECT` can be anything, so just set it as you like.
+`GOOGLE_REDIRECT` can be anything, so set it as you like.
 
 ---
 
