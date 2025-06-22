@@ -4,12 +4,8 @@ namespace App\Console\Commands;
 
 use App\AdSenseReport;
 use App\Notifications\AdSenseNotification;
-use Google\Service\Adsense;
-use Google\Service\Adsense\Account;
-use Google\Service\Adsense\ListAccountsResponse;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Notification;
-use Revolution\Google\Client\Facades\Google;
 
 class AdSenseCommand extends Command
 {
