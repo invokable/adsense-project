@@ -29,7 +29,7 @@ class AdSenseCommandTest extends TestCase
                         ['value' => '50'],    // CLICKS
                         ['value' => '2.5'],   // COST_PER_CLICK
                         ['value' => '125.0'], // ESTIMATED_EARNINGS
-                    ]
+                    ],
                 ],
                 'averages' => [
                     'cells' => [
@@ -38,7 +38,7 @@ class AdSenseCommandTest extends TestCase
                         ['value' => '7'],     // CLICKS
                         ['value' => '2.5'],   // COST_PER_CLICK
                         ['value' => '17.9'],  // ESTIMATED_EARNINGS
-                    ]
+                    ],
                 ],
                 'rows' => [
                     [
@@ -48,9 +48,9 @@ class AdSenseCommandTest extends TestCase
                             ['value' => '8'],
                             ['value' => '2.5'],
                             ['value' => '20.0'],
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ]);
 
         $this->app->instance(AdSenseReport::class, $mockReport);

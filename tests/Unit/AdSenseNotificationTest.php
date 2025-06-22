@@ -12,10 +12,10 @@ class AdSenseNotificationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         Config::set('ads.metrics', [
             'PAGE_VIEWS',
-            'CLICKS', 
+            'CLICKS',
             'COST_PER_CLICK',
             'ESTIMATED_EARNINGS',
         ]);
@@ -31,7 +31,7 @@ class AdSenseNotificationTest extends TestCase
                     ['value' => '50'],    // CLICKS
                     ['value' => '2.5'],   // COST_PER_CLICK
                     ['value' => '125.0'], // ESTIMATED_EARNINGS
-                ]
+                ],
             ],
             'averages' => [
                 'cells' => [
@@ -40,7 +40,7 @@ class AdSenseNotificationTest extends TestCase
                     ['value' => '7'],     // CLICKS
                     ['value' => '2.5'],   // COST_PER_CLICK
                     ['value' => '17.9'],  // ESTIMATED_EARNINGS
-                ]
+                ],
             ],
             'rows' => [
                 [
@@ -50,7 +50,7 @@ class AdSenseNotificationTest extends TestCase
                         ['value' => '8'],
                         ['value' => '2.5'],
                         ['value' => '20.0'],
-                    ]
+                    ],
                 ],
                 [
                     'cells' => [
@@ -59,21 +59,21 @@ class AdSenseNotificationTest extends TestCase
                         ['value' => '10'],
                         ['value' => '3.0'],
                         ['value' => '30.0'],
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
 
         $notification = new AdSenseNotification($reportData);
-        $mailMessage = $notification->toMail((object)[]);
+        $mailMessage = $notification->toMail((object) []);
 
         $this->assertInstanceOf(MailMessage::class, $mailMessage);
         $this->assertEquals('AdSense レポート（今月）', $mailMessage->subject);
         $this->assertEquals('AdSense レポート', $mailMessage->greeting);
-        
+
         // Check basic structure
         $this->assertContains('今月のAdSenseレポートをお送りします。', $mailMessage->introLines);
-        
+
         // Convert to string to check content
         $content = implode(' ', $mailMessage->introLines);
         $this->assertStringContainsString('収益: ¥125', $content);
@@ -91,12 +91,12 @@ class AdSenseNotificationTest extends TestCase
                     ['value' => '50'],    // CLICKS
                     ['value' => '2.5'],   // COST_PER_CLICK
                     ['value' => '125.0'], // ESTIMATED_EARNINGS
-                ]
-            ]
+                ],
+            ],
         ];
 
         $notification = new AdSenseNotification($reportData);
-        
+
         // Use reflection to access private method
         $reflection = new \ReflectionClass($notification);
         $method = $reflection->getMethod('getMetricValue');
@@ -118,8 +118,8 @@ class AdSenseNotificationTest extends TestCase
                     ['value' => '50'],
                     ['value' => '2.5'],
                     ['value' => '125.0'],
-                ]
-            ]
+                ],
+            ],
         ];
 
         $customDataSource = [
@@ -129,11 +129,11 @@ class AdSenseNotificationTest extends TestCase
                 ['value' => '25'],    // CLICKS
                 ['value' => '3.0'],   // COST_PER_CLICK
                 ['value' => '75.0'],  // ESTIMATED_EARNINGS
-            ]
+            ],
         ];
 
         $notification = new AdSenseNotification($reportData);
-        
+
         $reflection = new \ReflectionClass($notification);
         $method = $reflection->getMethod('getMetricValue');
         $method->setAccessible(true);
@@ -145,6 +145,6 @@ class AdSenseNotificationTest extends TestCase
     public function test_via_returns_mail_channel(): void
     {
         $notification = new AdSenseNotification([]);
-        $this->assertEquals(['mail'], $notification->via((object)[]));
+        $this->assertEquals(['mail'], $notification->via((object) []));
     }
 }
