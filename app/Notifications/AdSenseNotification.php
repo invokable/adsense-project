@@ -57,7 +57,7 @@ class AdSenseNotification extends Notification
         $todayEarnings = $this->findEarningsByDate($rows, now()->format('Y-m-d'));
         $yesterdayEarnings = $this->findEarningsByDate($rows, now()->subDay()->format('Y-m-d'));
         $yesterdayWeekAgoEarnings = $this->findEarningsByDate($rows, now()->subDays(8)->format('Y-m-d'));
-        
+
         $keyMetrics = [
             'today' => $todayEarnings,
             'yesterday' => $yesterdayEarnings,
@@ -141,7 +141,7 @@ class AdSenseNotification extends Notification
 
         $change = $currentEarnings - $previousEarnings;
         $percentage = ($change / $previousEarnings) * 100;
-        
+
         return [
             'amount' => $change,
             'percentage' => $percentage,
