@@ -1,156 +1,112 @@
-# Laravel Console Starter
+# Google AdSense Report
 
-A streamlined Laravel starter kit for building applications with custom artisan commands.
+This project is a sample implementation for sending Google AdSense revenue reports via email, built with https://github.com/invokable/laravel-console-starter
 
-This starter kit accelerates the development of Laravel applications that primarily use artisan commands for their functionality. Instead of building standalone CLI tools, you create powerful Laravel console applications that leverage the full Laravel framework ecosystem - including dependency injection, notifications, scheduling, and testing tools. Perfect for building scheduled tasks, data processing workflows, monitoring scripts, and automated maintenance tools that benefit from Laravel's robust architecture without the web application overhead.
+## How to Obtain AdSense API Access & Refresh Tokens Using `oauth2l` (No Web Server Required)
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/invokable/laravel-console-starter)
+This guide walks you through the complete process to obtain AdSense Management API access and refresh tokens without running a web server. You'll create a Google Cloud project, configure OAuth, use `oauth2l` to authorize, and store the credentials in a `.env` file.
 
-> **Note:** If you would like to create a console only project based on the latest official Laravel skeleton, you can also use the [laravel-slim](https://github.com/invokable/laravel-slim) package.
+---
 
+### ✅ Step 1: Create a Project in Google Cloud Console
 
-## Key Features
-- **Focus on Console Applications:** Streamlined for building Laravel applications with artisan commands, removing web-specific overhead.
-- **Artisan Command Ready:** Quickly generate and organize your console commands using `php artisan make:command`.
-- **Scheduled Tasks with GitHub Actions:** Includes a pre-configured example (`.github/workflows/cron.yml`) for running your commands on a schedule using GitHub Actions.
-- **Laravel Framework Power:** Leverage familiar Laravel features like its robust dependency injection container, event system, configuration management, and application testing tools for your console applications.
+1. Go to [Google Cloud Console](https://console.cloud.google.com/).
+2. Click the project dropdown in the top bar → **"New Project"**.
+3. Name your project and click **Create**.
 
-## Requirements
-- PHP ^8.2
-- Laravel Framework ^12.0
-- Laravel Installer ^5.14
+---
 
-## Installation
+### ✅ Step 2: Enable the AdSense Management API
 
-```shell
-laravel new --using=revolution/laravel-console-starter --no-interaction my-app
+1. In the Cloud Console, navigate to **APIs & Services > Library**.
+2. Search for **"AdSense Management API"**.
+3. Click on it, then click **"Enable"**.
+
+---
+
+### ✅ Step 3: Configure OAuth Consent Screen
+
+1. Go to **APIs & Services > OAuth consent screen**.
+2. Choose **"External"** for user type, then click **Create**.
+3. Fill in required app information:
+    - App name, support email
+    - Developer contact email
+4. Under **Scopes**, click **"Add or Remove Scopes"** and include:
+   ```
+   https://www.googleapis.com/auth/adsense.readonly
+   ```
+5. Under **Test Users**, add your Google account email.
+6. Save and continue to publish the consent screen.
+
+---
+
+### ✅ Step 4: Create OAuth Client ID
+
+1. Go to **APIs & Services > Credentials**.
+2. Click **"Create Credentials" > "OAuth Client ID"**.
+3. Choose **"Desktop app"** for Application Type.
+4. Name it and click **Create**.
+5. Download the client credentials JSON file (e.g., `client_secret_XXX.json`) and save it securely.
+
+---
+
+### ✅ Step 5: Install `oauth2l` CLI
+
+You can install `oauth2l` from the official GitHub repository:
+https://github.com/google/oauth2l
+
+---
+
+### ✅ Step 6: Fetch Access and Refresh Tokens
+
+Run the following command in your terminal:
+
+```bash
+oauth2l fetch \
+  --scope https://www.googleapis.com/auth/adsense.readonly \
+  --credentials ./client_secret_XXX.json \
+  --output_format json
 ```
 
-## Usage
+This will launch a browser asking you to authorize access with your Google account. After successful login and consent, a JSON response like below will appear:
 
-### Make a new command
-
-```shell
-php artisan make:command Hello --command=hello
-```
-This will create a new command class in `app/Console/Commands/Hello.php`. The `--command=hello` option sets the invokable name of your command, so you can run it later using `php artisan hello`.
-
-### Task Scheduling in GitHub Actions
-
-[cron.yml](./.github/workflows/cron.yml) is an example of how to run the command in GitHub Actions.
-This workflow file demonstrates how to set up a cron-like schedule to execute your Artisan commands automatically. You'll need to customize it with the specific commands you want to run and their desired frequency. Remember to configure repository secrets for any sensitive information your commands might need (e.g., API keys, database credentials).
-
-### Database
-
-While console applications may not frequently use local databases, it's common to utilize remote databases like AWS RDS when running them in GitHub Actions. Database connection settings should be configured using secrets.
-
-Example of environment variable configuration in a workflow:
-
-```yaml
-      - name: Run Command
-        run: php artisan inspire
-        env:
-          APP_KEY: ${{ secrets.APP_KEY }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_DATABASE: ${{ secrets.DB_DATABASE }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+```json
+{
+  "access_token": "...access-token...",
+  "expiry": "2025-06-22T11:51:37.242796+09:00",
+  "refresh_token": "...refresh-token...",
+  "scope": "https://www.googleapis.com/auth/adsense.readonly",
+  "token_type": "Bearer"
+}
 ```
 
-## Notifications
+---
 
-Laravel's built-in notification system provides a convenient way to send notifications from your console commands. This is particularly useful for:
+### ✅ Step 7: Store Tokens in `.env` File
 
--   Alerting you when a long-running task completes.
--   Reporting errors or issues encountered during command execution.
--   Sending updates or summaries to email, Slack, or other chat platforms.
+Copy the access and refresh tokens into a `.env` file:
 
-To use this feature, you'll typically create a notification class (e.g., using `php artisan make:notification TaskCompleted`) and then send it using the `Notification` facade. You will need to configure your desired notification channels (like mail, Slack, etc.) in your Laravel application. When configuring notification channels, especially those relying on external services or specific mail drivers, you may need to publish the relevant configuration files if they don't already exist in your `config` directory. You can do this using the following Artisan commands:
+```dotenv
+GOOGLE_CLIENT_ID=client_id_from_json
+GOOGLE_CLIENT_SECRET=client_secret_from_json
+GOOGLE_REDIRECT=http://localhost/
 
-```shell
-php artisan config:publish mail
-php artisan config:publish services
+ADS_ACCESS_TOKEN=...access-token...
+ADS_REFRESH_TOKEN=...refresh-token...
 ```
 
-The `config/mail.php` file allows you to configure your mailer settings, while `config/services.php` is used to store credentials and settings for various third-party services that Laravel can integrate with for notifications (e.g., Slack, Vonage). For detailed setup and usage, please refer to the official [Laravel Notification documentation](https://laravel.com/docs/notifications).
+These tokens can now be used by your application or script to make authorized requests to the AdSense API. The access token will expire, but you can use the refresh token to obtain a new one programmatically.
 
-## Application Ideas
+---
 
-Here are some ideas for applications that can be built using this starter kit:
+### 🔒 Tips
 
-### Monitoring and Analytics
-- Website uptime monitoring with Slack alerts
-- Server resource usage reports via email
-- SSL certificate expiration checks and email notifications
-- Competitor price change tracking with Discord notifications
-- API response time monitoring and alerts
-- Database size growth reports
-- Website performance score (Lighthouse) periodic checks
+- **Security**: Never commit `client_secret_XXX.json` or `.env` files to version control.
+- **Token Refreshing**: You can use `oauth2l fetch` again or implement automatic refresh logic using the refresh token.
+- **Scope Adjustments**: If you need to change scopes, update the OAuth consent screen and reauthorize.
 
-### Finance and Business
-- Send Google AdSense revenue via email
-- Notify AWS costs to Discord
-- Daily cryptocurrency portfolio updates to Discord
-- Stock price alerts to Slack channels
-- Invoice payment deadline reminders
-- Monthly expense report generation and delivery
-- Subscription renewal alerts
+---
 
-### Data Processing and Reports
-- Database backup and completion status notifications
-- Old log file cleanup and storage space reports
-- Data synchronization between different APIs with result reports
-- CSV data import and processing result notifications
-- Database integrity checks and issue reports
-- Cache cleanup and optimization reports
-- Periodic data exports and uploads to cloud storage
+### 🎉 Done!
 
-### Content and Marketing
-- Website broken link checks and reports
-- SEO keyword ranking monitoring and change notifications
-- Social media follower count change reports
-- Blog post performance metrics weekly reports
-- Content publication schedule reminders
-- RSS feed content aggregation and notifications
-- Email marketing campaign result reports
-
-### Development and DevOps
-- GitHub repository dependency security alerts
-- Codebase static analysis reports
-- Test coverage report generation and notifications
-- Post-deployment application health checks
-- Unused cloud resource detection and notifications
-- API documentation change detection and notifications
-- Codebase TODO comment aggregation and reminders
-
-### Personal Productivity
-- Daily morning weather forecast notifications
-- Calendar event daily summaries
-- Habit tracking and reminders
-- Subscription service renewal date notifications
-- Important dates and anniversary reminders
-- Regular backup reminders
-- Health data aggregation and trend reports
-
-### Additional Ideas
-
-- Domain expiration monitoring and alerts  
-- Suspicious access pattern detection from server logs  
-- Unusual financial transaction detection reports  
-- Automated OCR processing and results summary  
-- Google Trends keyword monitoring and notifications  
-- YouTube channel performance data aggregation  
-- CI/CD failure trend analysis  
-- Laravel package update detection alerts  
-- Personal spending category insights and visual reports  
-- Daily journal sentiment analysis and summaries
-
-## Documentation
-
-For detailed usage instructions and examples, please refer to our comprehensive tutorials:
-
-- [Tutorial (English)](./docs/tutorial.md)
-- [チュートリアル (日本語)](./docs/tutorial_ja.md)
-
-## LICENSE
-MIT                                                                
+You now have full access to the AdSense API with long-term credentials, without needing to run a web server. Use the stored tokens to authenticate your scripts or apps easily.
