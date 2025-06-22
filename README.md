@@ -2,9 +2,164 @@
 
 This project is a sample implementation for sending Google AdSense revenue reports via email, built with https://github.com/invokable/laravel-console-starter
 
+## 🚀 Features
+
+- **Automated AdSense Reporting**: Fetches month-to-date revenue data from Google AdSense API
+- **Email Notifications**: Sends formatted reports with total metrics, daily averages, and recent 7-day breakdown
+- **Scheduled Execution**: Runs automatically every 3 hours via GitHub Actions
+- **Configurable Metrics**: Easy customization of reported AdSense metrics
+- **Comprehensive Testing**: Full test coverage with mocked API integration
+
+## 🛠 Tech Stack
+
+- **Framework**: Laravel 12.0 (Console Application)
+- **Language**: PHP 8.4
+- **Database**: SQLite (minimal setup)
+- **API Integration**: Google AdSense Management API
+- **Authentication**: OAuth 2.0 with automatic token refresh
+- **Email**: Laravel Mail with Amazon SES
+- **Testing**: PHPUnit with Mockery
+- **Code Quality**: Laravel Pint (PSR-12)
+- **CI/CD**: GitHub Actions
+
+## 📋 Architecture
+
+### Core Components
+
+1. **AdSenseCommand** (`app/Console/Commands/AdSenseCommand.php`)
+   - Main Artisan command that orchestrates the reporting process
+   - Handles dependency injection and error handling
+
+2. **AdSenseReport** (`app/AdSenseReport.php`)
+   - Service class for Google AdSense API integration
+   - Manages OAuth authentication and token refresh
+   - Converts API responses to usable array format
+
+3. **AdSenseNotification** (`app/Notifications/AdSenseNotification.php`)
+   - Formats and sends email reports
+   - Generates Japanese-language reports with ¥ currency
+   - Includes total metrics, averages, and daily breakdowns
+
+### Configuration
+
+- **`config/ads.php`**: AdSense API credentials and metric definitions
+- **`config/google.php`**: Google OAuth configuration
+- **`config/mail.php`**: Email delivery settings
+
+### Data Flow
+
+```
+AdSenseCommand → AdSenseReport → Google AdSense API
+                      ↓
+           Array Data Conversion
+                      ↓
+AdSenseNotification → Email Report → User
+```
+
+## 🧪 Testing
+
+Comprehensive test suite with 100% core functionality coverage:
+
+```bash
+# Run all tests
+composer test
+
+# Run specific test suite
+php artisan test tests/Unit/AdSenseNotificationTest.php
+
+# Code formatting
+vendor/bin/pint
+```
+
+**Test Coverage:**
+- Command execution and notification sending
+- Email content formatting and metric calculation  
+- API integration with mocked Google services
+- Configuration management and error handling
+
+## ⚡ Quick Start
+
+```bash
+# Clone and install dependencies
+composer install
+
+# Copy environment file
+cp .env.example .env
+
+# Generate application key
+php artisan key:generate
+
+# Configure your AdSense API credentials (see OAuth setup below)
+# Edit .env file with your Google credentials
+
+# Run the report command
+php artisan ads:report
+
+# Run tests
+composer test
+```
+
+## 🔧 Environment Variables
+
+Required environment variables in `.env`:
+
+```bash
+# Google OAuth Credentials
+GOOGLE_CLIENT_ID=your_client_id
+GOOGLE_CLIENT_SECRET=your_client_secret
+GOOGLE_REDIRECT=http://localhost/
+
+# AdSense API Tokens
+ADS_ACCESS_TOKEN=your_access_token
+ADS_REFRESH_TOKEN=your_refresh_token
+
+# Email Configuration (Amazon SES)
+MAIL_MAILER=ses
+MAIL_FROM_ADDRESS=sender@example.com
+MAIL_FROM_NAME="AdSense Reports"
+MAIL_TO_ADDRESS=recipient@example.com  
+MAIL_TO_NAME="Report Recipient"
+
+# AWS SES Credentials
+AWS_ACCESS_KEY_ID=your_aws_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret
+AWS_DEFAULT_REGION=us-east-1
+```
+
+## 📊 Metrics Configuration
+
+Customize reported metrics in `config/ads.php`:
+
+```php
+'metrics' => [
+    'PAGE_VIEWS',           // ページビュー数
+    'CLICKS',              // クリック数  
+    'COST_PER_CLICK',      // クリック単価
+    'ESTIMATED_EARNINGS',   // 推定収益
+    // 'AD_REQUESTS',       // 広告リクエスト数
+    // 'AD_REQUESTS_CTR',   // クリック率
+    // 'PAGE_RPM',          // RPM
+],
+```
+
 ## How to Obtain AdSense API Access & Refresh Tokens Using `oauth2l` (No Web Server Required)
 
-This guide walks you through the complete process to obtain AdSense Management API access and refresh tokens without running a web server. You'll create a Google Cloud project, configure OAuth, use `oauth2l` to authorize, and store the credentials in a `.env` file.
+This guide walks you through the complete process to obtain AdSense Management API access and refresh tokens without running a web server.
+
+### Why This Setup Is Required
+
+Since this project is a console application that runs without a web interface, traditional OAuth authentication flows cannot be used. The AdSense API requires at least one-time user authorization to access account data, and service accounts are not supported for AdSense API access.
+
+The solution is to:
+1. **One-time authorization**: Authenticate once to obtain a refresh token
+2. **Long-term access**: Use the refresh token to automatically obtain new access tokens indefinitely
+3. **No web server needed**: While you could set up a web server for OAuth flow, `oauth2l` provides a simpler command-line approach
+
+Once you have the refresh token, your console application can run completely autonomously, refreshing access tokens as needed without any user interaction.
+
+### Setup Process
+
+You'll create a Google Cloud project, configure OAuth, use `oauth2l` to authorize, and store the credentials in a `.env` file.
 
 ---
 
