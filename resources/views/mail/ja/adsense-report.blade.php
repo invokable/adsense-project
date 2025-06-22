@@ -6,11 +6,9 @@
 ## 📈 重要指標
 
 <x-mail::table>
-| 期間 | 収益 |
-|:-----|-----:|
-| **本日** | **¥{{ number_format($keyMetrics['today'] ?? 0) }}** |
-| **昨日** | **¥{{ number_format($keyMetrics['yesterday'] ?? 0) }}** |
-| **今月** | **¥{{ number_format($keyMetrics['thisMonth'] ?? 0) }}** |
+| **本日** | **昨日** | **今月** |
+|:--------:|:--------:|:--------:|
+| **¥{{ number_format($keyMetrics['today'] ?? 0) }}** | **¥{{ number_format($keyMetrics['yesterday'] ?? 0) }}** | **¥{{ number_format($keyMetrics['thisMonth'] ?? 0) }}** |
 </x-mail::table>
 
 ## 合計実績
