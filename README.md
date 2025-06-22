@@ -1,5 +1,8 @@
 # Google AdSense Report
 
+[![Maintainability](https://qlty.sh/badges/cd9eeb28-893d-498a-8d10-e227728cb2f7/maintainability.svg)](https://qlty.sh/gh/invokable/projects/adsense-project)
+[![Code Coverage](https://qlty.sh/badges/cd9eeb28-893d-498a-8d10-e227728cb2f7/test_coverage.svg)](https://qlty.sh/gh/invokable/projects/adsense-project)
+
 This project is a sample implementation for sending Google AdSense revenue reports via email, built with [laravel-console-starter](https://github.com/invokable/laravel-console-starter)
 
 ## 🚀 Features
