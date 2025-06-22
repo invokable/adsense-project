@@ -23,6 +23,9 @@ class AdSenseNotificationTest extends TestCase
 
     public function test_to_mail_generates_correct_email_content(): void
     {
+        // Set Japanese locale for this test
+        Config::set('app.locale', 'ja');
+
         $reportData = [
             'totals' => [
                 'cells' => [
@@ -69,16 +72,56 @@ class AdSenseNotificationTest extends TestCase
 
         $this->assertInstanceOf(MailMessage::class, $mailMessage);
         $this->assertEquals('AdSense レポート（今月）', $mailMessage->subject);
-        $this->assertEquals('AdSense レポート', $mailMessage->greeting);
 
-        // Check basic structure
-        $this->assertContains('今月のAdSenseレポートをお送りします。', $mailMessage->introLines);
+        // Check that markdown template is being used
+        $this->assertEquals('mail.ja.adsense-report', $mailMessage->markdown);
 
-        // Convert to string to check content
-        $content = implode(' ', $mailMessage->introLines);
-        $this->assertStringContainsString('収益: ¥125', $content);
-        $this->assertStringContainsString('ページビュー: 1,000', $content);
-        $this->assertStringContainsString('クリック数: 50', $content);
+        // Check that view data contains expected values
+        $viewData = $mailMessage->viewData;
+        $this->assertArrayHasKey('totalMetrics', $viewData);
+        $this->assertArrayHasKey('averageMetrics', $viewData);
+        $this->assertArrayHasKey('recentDays', $viewData);
+
+        // Check total metrics
+        $this->assertEquals(125.0, $viewData['totalMetrics']['earnings']);
+        $this->assertEquals(1000.0, $viewData['totalMetrics']['pageViews']);
+        $this->assertEquals(50.0, $viewData['totalMetrics']['clicks']);
+        $this->assertEquals(2.5, $viewData['totalMetrics']['cpc']);
+    }
+
+    public function test_to_mail_with_english_locale(): void
+    {
+        // Set English locale for this test
+        Config::set('app.locale', 'en');
+
+        $reportData = [
+            'totals' => [
+                'cells' => [
+                    [],                   // Empty first cell
+                    ['value' => '1000'],  // PAGE_VIEWS
+                    ['value' => '50'],    // CLICKS
+                    ['value' => '2.5'],   // COST_PER_CLICK
+                    ['value' => '125.0'], // ESTIMATED_EARNINGS
+                ],
+            ],
+            'averages' => [
+                'cells' => [
+                    [],                   // Empty first cell
+                    ['value' => '143'],   // PAGE_VIEWS
+                    ['value' => '7'],     // CLICKS
+                    ['value' => '2.5'],   // COST_PER_CLICK
+                    ['value' => '17.9'],  // ESTIMATED_EARNINGS
+                ],
+            ],
+            'rows' => [],
+        ];
+
+        $notification = new AdSenseNotification($reportData);
+        $mailMessage = $notification->toMail((object) []);
+
+        $this->assertInstanceOf(MailMessage::class, $mailMessage);
+        $this->assertEquals('AdSense Report (This Month)', $mailMessage->subject);
+        $this->assertEquals('mail.en.adsense-report', $mailMessage->markdown);
     }
 
     public function test_get_metric_value_returns_correct_values(): void

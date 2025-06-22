@@ -34,50 +34,46 @@ class AdSenseNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $totalEarnings = $this->getMetricValue('ESTIMATED_EARNINGS');
-        $totalPageViews = $this->getMetricValue('PAGE_VIEWS');
-        $totalClicks = $this->getMetricValue('CLICKS');
-        $totalCpc = $this->getMetricValue('COST_PER_CLICK');
+        $locale = config('app.locale', 'en');
+        $template = $locale === 'ja' ? 'mail.ja.adsense-report' : 'mail.en.adsense-report';
+        $subject = $locale === 'ja' ? 'AdSense レポート（今月）' : 'AdSense Report (This Month)';
 
-        $avgEarnings = $this->getMetricValue('ESTIMATED_EARNINGS', $this->reports['averages']);
-        $avgPageViews = $this->getMetricValue('PAGE_VIEWS', $this->reports['averages']);
-        $avgClicks = $this->getMetricValue('CLICKS', $this->reports['averages']);
-        $avgCpc = $this->getMetricValue('COST_PER_CLICK', $this->reports['averages']);
+        $totalMetrics = [
+            'earnings' => $this->getMetricValue('ESTIMATED_EARNINGS'),
+            'pageViews' => $this->getMetricValue('PAGE_VIEWS'),
+            'clicks' => $this->getMetricValue('CLICKS'),
+            'cpc' => $this->getMetricValue('COST_PER_CLICK'),
+        ];
 
-        $mailMessage = (new MailMessage)
-            ->subject('AdSense レポート（今月）')
-            ->greeting('AdSense レポート')
-            ->line('今月のAdSenseレポートをお送りします。')
-            ->line('')
-            ->line('**合計実績**')
-            ->line('収益: ¥'.number_format($totalEarnings))
-            ->line('ページビュー: '.number_format($totalPageViews))
-            ->line('クリック数: '.number_format($totalClicks))
-            ->line('CPC: ¥'.number_format($totalCpc))
-            ->line('')
-            ->line('**日平均実績**')
-            ->line('収益: ¥'.number_format($avgEarnings))
-            ->line('ページビュー: '.number_format($avgPageViews))
-            ->line('クリック数: '.number_format($avgClicks))
-            ->line('CPC: ¥'.number_format($avgCpc))
-            ->line('');
+        $averageMetrics = [
+            'earnings' => $this->getMetricValue('ESTIMATED_EARNINGS', $this->reports['averages']),
+            'pageViews' => $this->getMetricValue('PAGE_VIEWS', $this->reports['averages']),
+            'clicks' => $this->getMetricValue('CLICKS', $this->reports['averages']),
+            'cpc' => $this->getMetricValue('COST_PER_CLICK', $this->reports['averages']),
+        ];
 
+        $recentDays = [];
         if (isset($this->reports['rows']) && count($this->reports['rows']) > 0) {
-            $mailMessage->line('**日別詳細（直近7日）**');
             $recentRows = array_slice($this->reports['rows'], 0, 7);
             foreach ($recentRows as $row) {
-                $date = $row['cells'][0]['value'] ?? 'N/A';
-                $pageViews = $this->getMetricValue('PAGE_VIEWS', $row);
-                $clicks = $this->getMetricValue('CLICKS', $row);
-                $cpc = $this->getMetricValue('COST_PER_CLICK', $row);
-                $earnings = $this->getMetricValue('ESTIMATED_EARNINGS', $row);
-
-                $mailMessage->line("📅 {$date}");
-                $mailMessage->line('　収益: ¥'.number_format($earnings).' | ページビュー: '.number_format($pageViews).' | クリック数: '.number_format($clicks).' | CPC: ¥'.number_format($cpc));
+                $recentDays[] = [
+                    'date' => $row['cells'][0]['value'] ?? 'N/A',
+                    'earnings' => $this->getMetricValue('ESTIMATED_EARNINGS', $row),
+                    'pageViews' => $this->getMetricValue('PAGE_VIEWS', $row),
+                    'clicks' => $this->getMetricValue('CLICKS', $row),
+                    'cpc' => $this->getMetricValue('COST_PER_CLICK', $row),
+                ];
             }
         }
 
-        return $mailMessage->line('')->line('レポート作成日時: '.now()->format('Y-m-d H:i:s'));
+        return (new MailMessage)
+            ->subject($subject)
+            ->markdown($template, [
+                'totalMetrics' => $totalMetrics,
+                'averageMetrics' => $averageMetrics,
+                'recentDays' => $recentDays,
+                'reportDate' => now()->format('Y-m-d H:i:s'),
+            ]);
     }
 
     /**
