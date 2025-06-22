@@ -31,8 +31,9 @@ php artisan key:generate
 
 ### Core Components
 
-- **AdSenseCommand** (`app/Console/Commands/AdSenseCommand.php`): Main Artisan command that fetches yesterday's AdSense data
-- **AdSenseNotification** (`app/Notifications/AdSenseNotification.php`): Email notification class for sending reports
+- **AdSenseCommand** (`app/Console/Commands/AdSenseCommand.php`): Main Artisan command that orchestrates report generation and email sending
+- **AdSenseReport** (`app/AdSenseReport.php`): Service class that handles Google AdSense API integration and data fetching
+- **AdSenseNotification** (`app/Notifications/AdSenseNotification.php`): Email notification class for formatting and sending reports
 
 ### API Integration
 
@@ -42,7 +43,7 @@ php artisan key:generate
 
 ### Configuration Files
 
-- `config/ads.php`: AdSense API token management
+- `config/ads.php`: AdSense API token management and metrics configuration
 - `config/google.php`: Google OAuth configuration and scopes  
 - `config/mail.php`: Email configuration for notifications
 
@@ -61,10 +62,15 @@ MAIL_TO_NAME=
 
 ## Data Flow
 
-1. Authenticate using Google OAuth 2.0 access tokens
-2. Fetch yesterday's AdSense data (page views, clicks, revenue)
-3. Process and format report data
-4. Send email notification with results
+1. AdSenseCommand receives execution request
+2. AdSenseReport authenticates using Google OAuth 2.0 access tokens
+3. Fetch month-to-date AdSense data (page views, clicks, CPC, revenue)
+4. Convert API response from object to array format
+5. AdSenseNotification formats data into email with:
+   - Total performance metrics
+   - Daily average metrics  
+   - Recent 7 days detailed breakdown
+6. Send email notification with formatted report
 
 ## Development Notes
 
@@ -73,6 +79,57 @@ MAIL_TO_NAME=
 - Security: Never commit `.env` files or `client_secret_*.json` files
 - Token refresh logic is implemented for long-term operation
 
+## Testing
+
+Comprehensive test suite covering all major components:
+
+- **Feature Tests**: End-to-end command execution testing
+- **Unit Tests**: Individual class and method testing
+- **Mock Integration**: Google API calls are mocked for reliable testing
+
+### Test Structure
+
+- `tests/Feature/AdSenseCommandTest.php`: Tests command execution and notification sending
+- `tests/Unit/AdSenseNotificationTest.php`: Tests email formatting and metric calculation
+- `tests/Unit/AdSenseReportTest.php`: Tests API integration and data conversion
+
+### Running Tests
+
+```bash
+# Run all tests
+composer test
+
+# Run specific test file  
+php artisan test tests/Unit/AdSenseNotificationTest.php
+
+# Run tests with coverage (if configured)
+php artisan test --coverage
+```
+
+## Scheduling
+
+The application uses GitHub Actions for automated execution:
+
+- **Frequency**: Every 3 hours (`0 */3 * * *`)
+- **Workflow**: `.github/workflows/cron.yml`
+- **Environment**: All required secrets must be configured in GitHub repository settings
+
 ## OAuth Setup
 
 The project requires Google Cloud Console setup with AdSense Management API enabled. See README.md for detailed OAuth setup instructions using `oauth2l` CLI tool.
+
+## Configuration Management
+
+### AdSense Metrics
+
+Configurable metrics in `config/ads.php`:
+```php
+'metrics' => [
+    'PAGE_VIEWS',
+    'CLICKS', 
+    'COST_PER_CLICK',
+    'ESTIMATED_EARNINGS',
+]
+```
+
+Add or remove metrics as needed. The system automatically handles array indexing through the `getMetricValue()` helper method.
