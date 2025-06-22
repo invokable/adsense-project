@@ -52,7 +52,7 @@ class AdSenseCommand extends Command
         $optParams = [
             'metrics' => config('ads.metrics'),
             'dimensions' => 'DATE',
-            'orderBy' => '+DATE',
+            'orderBy' => '-DATE',
             'dateRange' => 'LAST_7_DAYS',
         ];
 
