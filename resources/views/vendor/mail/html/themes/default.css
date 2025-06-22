@@ -265,18 +265,34 @@ img {
 /* Panels */
 
 .panel {
-    border-left: #2d3748 solid 4px;
+    border-left: #1e40af solid 4px;
     margin: 21px 0;
 }
 
 .panel-content {
-    background-color: #edf2f7;
-    color: #718096;
+    background-color: #3b82f6;
+    color: #ffffff;
     padding: 16px;
 }
 
 .panel-content p {
-    color: #718096;
+    color: #ffffff;
+}
+
+.panel-content th {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.panel-content td {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.panel-content td strong {
+    font-size: 22px;
+    font-weight: bold;
 }
 
 .panel-item {
