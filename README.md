@@ -1,6 +1,6 @@
 # Google AdSense Report
 
-This project is a sample implementation for sending Google AdSense revenue reports via email, built with https://github.com/invokable/laravel-console-starter
+This project is a sample implementation for sending Google AdSense revenue reports via email, built with [laravel-console-starter](https://github.com/invokable/laravel-console-starter)
 
 ## 🚀 Features
 
@@ -26,18 +26,18 @@ This project is a sample implementation for sending Google AdSense revenue repor
 ### Core Components
 
 1. **AdSenseCommand** (`app/Console/Commands/AdSenseCommand.php`)
-   - Main Artisan command that orchestrates the reporting process
-   - Handles dependency injection and error handling
+    - Main Artisan command that orchestrates the reporting process
+    - Handles dependency injection and error handling
 
 2. **AdSenseReport** (`app/AdSenseReport.php`)
-   - Service class for Google AdSense API integration
-   - Manages OAuth authentication and token refresh
-   - Converts API responses to usable array format
+    - Service class for Google AdSense API integration
+    - Manages OAuth authentication and token refresh
+    - Converts API responses to usable array format
 
 3. **AdSenseNotification** (`app/Notifications/AdSenseNotification.php`)
-   - Formats and sends email reports
-   - Generates Japanese-language reports with ¥ currency
-   - Includes total metrics, averages, and daily breakdowns
+    - Formats and sends email reports
+    - Generates Japanese-language reports with ¥ currency
+    - Includes total metrics, averages, and daily breakdowns
 
 ### Configuration
 
@@ -71,8 +71,9 @@ vendor/bin/pint
 ```
 
 **Test Coverage:**
+
 - Command execution and notification sending
-- Email content formatting and metric calculation  
+- Email content formatting and metric calculation
 - API integration with mocked Google services
 - Configuration management and error handling
 
@@ -131,34 +132,41 @@ Customize reported metrics in `config/ads.php`:
 
 ```php
 'metrics' => [
-    'PAGE_VIEWS',           // ページビュー数
-    'CLICKS',              // クリック数  
-    'COST_PER_CLICK',      // クリック単価
-    'ESTIMATED_EARNINGS',   // 推定収益
-    // 'AD_REQUESTS',       // 広告リクエスト数
-    // 'AD_REQUESTS_CTR',   // クリック率
+    'PAGE_VIEWS',           // Page views
+    'CLICKS',               // Clicks
+    'COST_PER_CLICK',       // Cost per click
+    'ESTIMATED_EARNINGS',   // Estimated earnings
+    // 'AD_REQUESTS',       // Ad requests
+    // 'AD_REQUESTS_CTR',   // Click-through rate
     // 'PAGE_RPM',          // RPM
 ],
 ```
 
 ## How to Obtain AdSense API Access & Refresh Tokens Using `oauth2l` (No Web Server Required)
 
-This guide walks you through the complete process to obtain AdSense Management API access and refresh tokens without running a web server.
+This guide walks you through the complete process to obtain AdSense Management API access and refresh tokens without
+running a web server.
 
 ### Why This Setup Is Required
 
-Since this project is a console application that runs without a web interface, traditional OAuth authentication flows cannot be used. The AdSense API requires at least one-time user authorization to access account data, and service accounts are not supported for AdSense API access.
+Since this project is a console application that runs without a web interface, traditional OAuth authentication flows
+cannot be used. The AdSense API requires at least one-time user authorization to access account data, and service
+accounts are not supported for AdSense API access.
 
 The solution is to:
+
 1. **One-time authorization**: Authenticate once to obtain a refresh token
 2. **Long-term access**: Use the refresh token to automatically obtain new access tokens indefinitely
-3. **No web server needed**: While you could set up a web server for OAuth flow, `oauth2l` provides a simpler command-line approach
+3. **No web server needed**: While you could set up a web server for OAuth flow, `oauth2l` provides a simpler
+   command-line approach
 
-Once you have the refresh token, your console application can run completely autonomously, refreshing access tokens as needed without any user interaction.
+Once you have the refresh token, your console application can run completely autonomously, refreshing access tokens as
+needed without any user interaction.
 
 ### Setup Process
 
-You'll create a Google Cloud project, configure OAuth, use `oauth2l` to authorize, and store the credentials in a `.env` file.
+You'll create a Google Cloud project, configure OAuth, use `oauth2l` to authorize, and store the credentials in a `.env`
+file.
 
 ---
 
@@ -222,15 +230,16 @@ oauth2l fetch \
   --output_format json
 ```
 
-This will launch a browser asking you to authorize access with your Google account. After successful login and consent, a JSON response like below will appear:
+This will launch a browser asking you to authorize access with your Google account. After successful login and consent,
+a JSON response like below will appear:
 
 ```json
 {
-  "access_token": "...access-token...",
-  "expiry": "2025-06-22T11:51:37.242796+09:00",
-  "refresh_token": "...refresh-token...",
-  "scope": "https://www.googleapis.com/auth/adsense.readonly",
-  "token_type": "Bearer"
+    "access_token": "...access-token...",
+    "expiry": "2025-06-22T11:51:37.242796+09:00",
+    "refresh_token": "...refresh-token...",
+    "scope": "https://www.googleapis.com/auth/adsense.readonly",
+    "token_type": "Bearer"
 }
 ```
 
@@ -249,7 +258,8 @@ ADS_ACCESS_TOKEN=...access-token...
 ADS_REFRESH_TOKEN=...refresh-token...
 ```
 
-These tokens can now be used by your application or script to make authorized requests to the AdSense API. The access token will expire, but you can use the refresh token to obtain a new one programmatically.
+These tokens can now be used by your application or script to make authorized requests to the AdSense API. The access
+token will expire, but you can use the refresh token to obtain a new one programmatically.
 
 ---
 
@@ -263,7 +273,9 @@ These tokens can now be used by your application or script to make authorized re
 
 ### 🎉 Done!
 
-You now have full access to the AdSense API with long-term credentials, without needing to run a web server. Use the stored tokens to authenticate your scripts or apps easily.
+You now have full access to the AdSense API with long-term credentials, without needing to run a web server. Use the
+stored tokens to authenticate your scripts or apps easily.
 
 ## LICENSE
+
 MIT License
