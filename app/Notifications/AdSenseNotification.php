@@ -82,16 +82,17 @@ class AdSenseNotification extends Notification
     /**
      * Get metric value by name from data source
      */
-    private function getMetricValue(string $metricName, object $dataSource = null): float
+    private function getMetricValue(string $metricName, ?object $dataSource = null): float
     {
         $metrics = config('ads.metrics');
         $index = array_search($metricName, $metrics);
-        
+
         if ($index === false) {
             return 0;
         }
-        
+
         $dataSource = $dataSource ?? $this->reports->totals;
+
         return $dataSource->cells[$index]->value ?? 0;
     }
 
