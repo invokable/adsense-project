@@ -9,7 +9,7 @@
 <x-mail::table>
 | **本日** | **昨日** | **今月** |
 |:--------:|:--------:|:--------:|
-| **¥{{ number_format($keyMetrics['today'] ?? 0) }}** | **¥{{ number_format($keyMetrics['yesterday'] ?? 0) }}** | **¥{{ number_format($keyMetrics['thisMonth'] ?? 0) }}** |
+| **¥{{ number_format($keyMetrics['today'] ?? 0) }}** | **¥{{ number_format($keyMetrics['yesterday'] ?? 0) }}**<br><span class="change-text">@if($yesterdayChange['direction'] === 'up')▲@elseif($yesterdayChange['direction'] === 'down')▼@endif{{ $yesterdayChange['amount'] >= 0 ? '+' : '' }}¥{{ number_format(abs($yesterdayChange['amount'])) }}({{ $yesterdayChange['amount'] >= 0 ? '+' : '' }}{{ number_format($yesterdayChange['percentage'], 1) }}%)</span> | **¥{{ number_format($keyMetrics['thisMonth'] ?? 0) }}** |
 </x-mail::table>
 </x-mail::panel>
 

@@ -9,7 +9,7 @@ Here's your monthly AdSense report.
 <x-mail::table>
 | **Today** | **Yesterday** | **This Month** |
 |:---------:|:-------------:|:--------------:|
-| **${{ number_format($keyMetrics['today'] ?? 0, 2) }}** | **${{ number_format($keyMetrics['yesterday'] ?? 0, 2) }}** | **${{ number_format($keyMetrics['thisMonth'] ?? 0, 2) }}** |
+| **${{ number_format($keyMetrics['today'] ?? 0, 2) }}** | **${{ number_format($keyMetrics['yesterday'] ?? 0, 2) }}**<br><span class="change-text">@if($yesterdayChange['direction'] === 'up')▲@elseif($yesterdayChange['direction'] === 'down')▼@endif{{ $yesterdayChange['amount'] >= 0 ? '+' : '' }}${{ number_format(abs($yesterdayChange['amount']), 2) }}({{ $yesterdayChange['amount'] >= 0 ? '+' : '' }}{{ number_format($yesterdayChange['percentage'], 1) }}%)</span> | **${{ number_format($keyMetrics['thisMonth'] ?? 0, 2) }}** |
 </x-mail::table>
 </x-mail::panel>
 

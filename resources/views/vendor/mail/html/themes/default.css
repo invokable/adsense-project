@@ -304,6 +304,16 @@ img {
     padding-bottom: 0;
 }
 
+/* Change Text Styling */
+
+.change-text {
+    font-size: 12px;
+    font-weight: normal;
+    opacity: 0.9;
+    display: block;
+    margin-top: 4px;
+}
+
 /* Utilities */
 
 .break-all {

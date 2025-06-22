@@ -57,6 +57,60 @@ Artisan::command('mail:preview', function () {
                     ['value' => '63.8'],
                 ],
             ],
+            [
+                'cells' => [
+                    ['value' => now()->subDays(3)->format('Y-m-d')],
+                    ['value' => '580'],
+                    ['value' => '15'],
+                    ['value' => '2.8'],
+                    ['value' => '42.0'],
+                ],
+            ],
+            [
+                'cells' => [
+                    ['value' => now()->subDays(4)->format('Y-m-d')],
+                    ['value' => '690'],
+                    ['value' => '21'],
+                    ['value' => '3.1'],
+                    ['value' => '65.1'],
+                ],
+            ],
+            [
+                'cells' => [
+                    ['value' => now()->subDays(5)->format('Y-m-d')],
+                    ['value' => '750'],
+                    ['value' => '26'],
+                    ['value' => '2.9'],
+                    ['value' => '75.4'],
+                ],
+            ],
+            [
+                'cells' => [
+                    ['value' => now()->subDays(6)->format('Y-m-d')],
+                    ['value' => '620'],
+                    ['value' => '19'],
+                    ['value' => '2.6'],
+                    ['value' => '49.4'],
+                ],
+            ],
+            [
+                'cells' => [
+                    ['value' => now()->subDays(7)->format('Y-m-d')],
+                    ['value' => '710'],
+                    ['value' => '23'],
+                    ['value' => '3.0'],
+                    ['value' => '69.0'],
+                ],
+            ],
+            [
+                'cells' => [
+                    ['value' => now()->subDays(8)->format('Y-m-d')],  // Yesterday week ago
+                    ['value' => '450'],
+                    ['value' => '12'],
+                    ['value' => '2.5'],
+                    ['value' => '30.0'],  // This will show +18.6 (+62%) change
+                ],
+            ],
         ],
     ];
 

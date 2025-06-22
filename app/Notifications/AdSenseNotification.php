@@ -54,11 +54,18 @@ class AdSenseNotification extends Notification
 
         // Get key daily metrics
         $rows = $this->reports['rows'] ?? [];
+        $todayEarnings = $this->findEarningsByDate($rows, now()->format('Y-m-d'));
+        $yesterdayEarnings = $this->findEarningsByDate($rows, now()->subDay()->format('Y-m-d'));
+        $yesterdayWeekAgoEarnings = $this->findEarningsByDate($rows, now()->subDays(8)->format('Y-m-d'));
+        
         $keyMetrics = [
-            'today' => $this->findEarningsByDate($rows, now()->format('Y-m-d')),
-            'yesterday' => $this->findEarningsByDate($rows, now()->subDay()->format('Y-m-d')),
+            'today' => $todayEarnings,
+            'yesterday' => $yesterdayEarnings,
             'thisMonth' => $totalMetrics['earnings'],
         ];
+
+        // Calculate yesterday's change compared to a week ago
+        $yesterdayChange = $this->calculateEarningsChange($yesterdayEarnings, $yesterdayWeekAgoEarnings);
 
         $recentDays = [];
         if (isset($this->reports['rows']) && count($this->reports['rows']) > 0) {
@@ -78,6 +85,7 @@ class AdSenseNotification extends Notification
             ->subject($subject)
             ->markdown($template, [
                 'keyMetrics' => $keyMetrics,
+                'yesterdayChange' => $yesterdayChange,
                 'totalMetrics' => $totalMetrics,
                 'averageMetrics' => $averageMetrics,
                 'recentDays' => $recentDays,
@@ -116,6 +124,29 @@ class AdSenseNotification extends Notification
         }
 
         return 0.0;
+    }
+
+    /**
+     * Calculate change in earnings compared to a week ago
+     */
+    private function calculateEarningsChange(float $currentEarnings, float $previousEarnings): array
+    {
+        if ($previousEarnings == 0) {
+            return [
+                'amount' => $currentEarnings,
+                'percentage' => 0,
+                'direction' => $currentEarnings > 0 ? 'up' : 'neutral',
+            ];
+        }
+
+        $change = $currentEarnings - $previousEarnings;
+        $percentage = ($change / $previousEarnings) * 100;
+        
+        return [
+            'amount' => $change,
+            'percentage' => $percentage,
+            'direction' => $change > 0 ? 'up' : ($change < 0 ? 'down' : 'neutral'),
+        ];
     }
 
     /**
