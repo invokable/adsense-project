@@ -1,9 +1,9 @@
 name: cron
 
 on:
-  push:
+  #push:
   schedule:
-    - cron: '0 0 * * *' #UTC
+    - cron: '0 */3 * * *' #UTC - every 3 hours
 
 jobs:
   cron:
