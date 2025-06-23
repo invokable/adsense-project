@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\AdSenseReport;
+use App\AdSenseReportTransformer;
 use App\Console\Commands\AdSenseCommand;
 use App\Notifications\AdSenseNotification;
 use Illuminate\Support\Facades\Config;
@@ -53,7 +54,39 @@ class AdSenseCommandTest extends TestCase
                 ],
             ]);
 
+        // Mock AdSenseReportTransformer
+        $mockTransformer = $this->createMock(AdSenseReportTransformer::class);
+        $mockTransformer->expects($this->once())
+            ->method('toNotificationData')
+            ->willReturn([
+                'keyMetrics' => [
+                    'today' => 0.0,
+                    'yesterday' => 0.0,
+                    'thisMonth' => 125.0,
+                ],
+                'yesterdayChange' => [
+                    'amount' => 0.0,
+                    'percentage' => 0,
+                    'direction' => 'neutral',
+                ],
+                'totalMetrics' => [
+                    'earnings' => 125.0,
+                    'pageViews' => 1000.0,
+                    'clicks' => 50.0,
+                    'cpc' => 2.5,
+                ],
+                'averageMetrics' => [
+                    'earnings' => 17.9,
+                    'pageViews' => 143.0,
+                    'clicks' => 7.0,
+                    'cpc' => 2.5,
+                ],
+                'recentDays' => [],
+                'reportDate' => '2023-12-03 12:00:00',
+            ]);
+
         $this->app->instance(AdSenseReport::class, $mockReport);
+        $this->app->instance(AdSenseReportTransformer::class, $mockTransformer);
 
         // Mock Notification
         Notification::fake();

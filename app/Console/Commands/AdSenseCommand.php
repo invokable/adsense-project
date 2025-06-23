@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\AdSenseReport;
+use App\AdSenseReportTransformer;
 use App\Notifications\AdSenseNotification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Notification;
@@ -26,12 +27,13 @@ class AdSenseCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle(AdSenseReport $adsense): int
+    public function handle(AdSenseReport $adsense, AdSenseReportTransformer $transformer): int
     {
-        $reports = $adsense->report();
+        $rawReports = $adsense->report();
+        $notificationData = $transformer->toNotificationData($rawReports);
 
         Notification::route('mail', [config('mail.to.address') => config('mail.to.name')])
-            ->notify(new AdSenseNotification($reports));
+            ->notify(new AdSenseNotification($notificationData));
 
         return 0;
     }

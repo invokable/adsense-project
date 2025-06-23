@@ -26,48 +26,49 @@ class AdSenseNotificationTest extends TestCase
         // Set Japanese locale for this test
         Config::set('app.locale', 'ja');
 
-        $reportData = [
-            'totals' => [
-                'cells' => [
-                    [],                   // Empty first cell
-                    ['value' => '1000'],  // PAGE_VIEWS
-                    ['value' => '50'],    // CLICKS
-                    ['value' => '2.5'],   // COST_PER_CLICK
-                    ['value' => '125.0'], // ESTIMATED_EARNINGS
-                ],
+        $notificationData = [
+            'keyMetrics' => [
+                'today' => 0.0,
+                'yesterday' => 0.0,
+                'thisMonth' => 125.0,
             ],
-            'averages' => [
-                'cells' => [
-                    [],                   // Empty first cell
-                    ['value' => '143'],   // PAGE_VIEWS
-                    ['value' => '7'],     // CLICKS
-                    ['value' => '2.5'],   // COST_PER_CLICK
-                    ['value' => '17.9'],  // ESTIMATED_EARNINGS
-                ],
+            'yesterdayChange' => [
+                'amount' => 0.0,
+                'percentage' => 0,
+                'direction' => 'neutral',
             ],
-            'rows' => [
+            'totalMetrics' => [
+                'earnings' => 125.0,
+                'pageViews' => 1000.0,
+                'clicks' => 50.0,
+                'cpc' => 2.5,
+            ],
+            'averageMetrics' => [
+                'earnings' => 17.9,
+                'pageViews' => 143.0,
+                'clicks' => 7.0,
+                'cpc' => 2.5,
+            ],
+            'recentDays' => [
                 [
-                    'cells' => [
-                        ['value' => '2023-12-01'],
-                        ['value' => '150'],
-                        ['value' => '8'],
-                        ['value' => '2.5'],
-                        ['value' => '20.0'],
-                    ],
+                    'date' => '2023-12-01',
+                    'earnings' => 20.0,
+                    'pageViews' => 150.0,
+                    'clicks' => 8.0,
+                    'cpc' => 2.5,
                 ],
                 [
-                    'cells' => [
-                        ['value' => '2023-12-02'],
-                        ['value' => '200'],
-                        ['value' => '10'],
-                        ['value' => '3.0'],
-                        ['value' => '30.0'],
-                    ],
+                    'date' => '2023-12-02',
+                    'earnings' => 30.0,
+                    'pageViews' => 200.0,
+                    'clicks' => 10.0,
+                    'cpc' => 3.0,
                 ],
             ],
+            'reportDate' => '2023-12-03 12:00:00',
         ];
 
-        $notification = new AdSenseNotification($reportData);
+        $notification = new AdSenseNotification($notificationData);
         $mailMessage = $notification->toMail((object) []);
 
         $this->assertInstanceOf(MailMessage::class, $mailMessage);
@@ -100,29 +101,34 @@ class AdSenseNotificationTest extends TestCase
         // Set English locale for this test
         Config::set('app.locale', 'en');
 
-        $reportData = [
-            'totals' => [
-                'cells' => [
-                    [],                   // Empty first cell
-                    ['value' => '1000'],  // PAGE_VIEWS
-                    ['value' => '50'],    // CLICKS
-                    ['value' => '2.5'],   // COST_PER_CLICK
-                    ['value' => '125.0'], // ESTIMATED_EARNINGS
-                ],
+        $notificationData = [
+            'keyMetrics' => [
+                'today' => 0.0,
+                'yesterday' => 0.0,
+                'thisMonth' => 125.0,
             ],
-            'averages' => [
-                'cells' => [
-                    [],                   // Empty first cell
-                    ['value' => '143'],   // PAGE_VIEWS
-                    ['value' => '7'],     // CLICKS
-                    ['value' => '2.5'],   // COST_PER_CLICK
-                    ['value' => '17.9'],  // ESTIMATED_EARNINGS
-                ],
+            'yesterdayChange' => [
+                'amount' => 0.0,
+                'percentage' => 0,
+                'direction' => 'neutral',
             ],
-            'rows' => [],
+            'totalMetrics' => [
+                'earnings' => 125.0,
+                'pageViews' => 1000.0,
+                'clicks' => 50.0,
+                'cpc' => 2.5,
+            ],
+            'averageMetrics' => [
+                'earnings' => 17.9,
+                'pageViews' => 143.0,
+                'clicks' => 7.0,
+                'cpc' => 2.5,
+            ],
+            'recentDays' => [],
+            'reportDate' => '2023-12-03 12:00:00',
         ];
 
-        $notification = new AdSenseNotification($reportData);
+        $notification = new AdSenseNotification($notificationData);
         $mailMessage = $notification->toMail((object) []);
 
         $this->assertInstanceOf(MailMessage::class, $mailMessage);
@@ -132,101 +138,6 @@ class AdSenseNotificationTest extends TestCase
         // Check that keyMetrics is included in view data
         $viewData = $mailMessage->viewData;
         $this->assertArrayHasKey('keyMetrics', $viewData);
-    }
-
-    public function test_get_metric_value_returns_correct_values(): void
-    {
-        $reportData = [
-            'totals' => [
-                'cells' => [
-                    [],                   // Empty first cell
-                    ['value' => '1000'],  // PAGE_VIEWS
-                    ['value' => '50'],    // CLICKS
-                    ['value' => '2.5'],   // COST_PER_CLICK
-                    ['value' => '125.0'], // ESTIMATED_EARNINGS
-                ],
-            ],
-        ];
-
-        $notification = new AdSenseNotification($reportData);
-
-        // Use reflection to access private method
-        $reflection = new \ReflectionClass($notification);
-        $method = $reflection->getMethod('getMetricValue');
-        $method->setAccessible(true);
-
-        $this->assertEquals(1000.0, $method->invoke($notification, 'PAGE_VIEWS'));
-        $this->assertEquals(50.0, $method->invoke($notification, 'CLICKS'));
-        $this->assertEquals(2.5, $method->invoke($notification, 'COST_PER_CLICK'));
-        $this->assertEquals(125.0, $method->invoke($notification, 'ESTIMATED_EARNINGS'));
-        $this->assertEquals(0.0, $method->invoke($notification, 'INVALID_METRIC'));
-    }
-
-    public function test_get_metric_value_with_custom_data_source(): void
-    {
-        $reportData = [
-            'totals' => [
-                'cells' => [
-                    ['value' => '1000'],
-                    ['value' => '50'],
-                    ['value' => '2.5'],
-                    ['value' => '125.0'],
-                ],
-            ],
-        ];
-
-        $customDataSource = [
-            'cells' => [
-                [],                   // Empty first cell
-                ['value' => '500'],   // PAGE_VIEWS
-                ['value' => '25'],    // CLICKS
-                ['value' => '3.0'],   // COST_PER_CLICK
-                ['value' => '75.0'],  // ESTIMATED_EARNINGS
-            ],
-        ];
-
-        $notification = new AdSenseNotification($reportData);
-
-        $reflection = new \ReflectionClass($notification);
-        $method = $reflection->getMethod('getMetricValue');
-        $method->setAccessible(true);
-
-        $this->assertEquals(500.0, $method->invoke($notification, 'PAGE_VIEWS', $customDataSource));
-        $this->assertEquals(25.0, $method->invoke($notification, 'CLICKS', $customDataSource));
-    }
-
-    public function test_find_earnings_by_date(): void
-    {
-        $rows = [
-            [
-                'cells' => [
-                    ['value' => '2023-12-01'],
-                    ['value' => '150'],
-                    ['value' => '8'],
-                    ['value' => '2.5'],
-                    ['value' => '20.0'],
-                ],
-            ],
-            [
-                'cells' => [
-                    ['value' => '2023-12-02'],
-                    ['value' => '200'],
-                    ['value' => '10'],
-                    ['value' => '3.0'],
-                    ['value' => '30.0'],
-                ],
-            ],
-        ];
-
-        $notification = new AdSenseNotification(['rows' => $rows]);
-
-        $reflection = new \ReflectionClass($notification);
-        $method = $reflection->getMethod('findEarningsByDate');
-        $method->setAccessible(true);
-
-        $this->assertEquals(20.0, $method->invoke($notification, $rows, '2023-12-01'));
-        $this->assertEquals(30.0, $method->invoke($notification, $rows, '2023-12-02'));
-        $this->assertEquals(0.0, $method->invoke($notification, $rows, '2023-12-03'));
     }
 
     public function test_via_returns_mail_channel(): void

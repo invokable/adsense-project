@@ -30,17 +30,22 @@ This project is a sample implementation for sending Google AdSense revenue repor
 
 1. **AdSenseCommand** (`app/Console/Commands/AdSenseCommand.php`)
     - Main Artisan command that orchestrates the reporting process
-    - Handles dependency injection and error handling
+    - Handles dependency injection and coordinates the workflow
 
 2. **AdSenseReport** (`app/AdSenseReport.php`)
     - Service class for Google AdSense API integration
     - Manages OAuth authentication and token refresh
     - Converts API responses to usable array format
 
-3. **AdSenseNotification** (`app/Notifications/AdSenseNotification.php`)
-    - Formats and sends email reports
-    - Generates Japanese-language reports with ¥ currency
-    - Includes total metrics, averages, and daily breakdowns
+3. **AdSenseReportTransformer** (`app/AdSenseReportTransformer.php`)
+    - Transforms raw AdSense API data into notification-ready format
+    - Handles data aggregation, metric calculations, and change analysis
+    - Separates data transformation concerns from notification delivery
+
+4. **AdSenseNotification** (`app/Notifications/AdSenseNotification.php`)
+    - Handles email formatting and delivery
+    - Generates Japanese/English reports with appropriate templates
+    - Focuses solely on notification presentation and delivery
 
 ### Configuration
 
@@ -52,10 +57,14 @@ This project is a sample implementation for sending Google AdSense revenue repor
 
 ```
 AdSenseCommand → AdSenseReport → Google AdSense API
-                      ↓
-           Array Data Conversion
-                      ↓
-AdSenseNotification → Email Report → User
+       ↓               ↓
+       ↓        Raw API Data (totals, averages, rows)
+       ↓               ↓
+       ↓        AdSenseReportTransformer
+       ↓               ↓
+       ↓     Notification Data (keyMetrics, totalMetrics, etc.)
+       ↓               ↓
+       └────→ AdSenseNotification → Email Report → User
 ```
 
 ## 🧪 Testing

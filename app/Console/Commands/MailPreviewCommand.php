@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\AdSenseReportTransformer;
 use App\Notifications\AdSenseNotification;
 use Illuminate\Console\Command;
 
@@ -24,10 +25,10 @@ class MailPreviewCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): int
+    public function handle(AdSenseReportTransformer $transformer): int
     {
         // Create sample report data for preview
-        $reportData = [
+        $rawReportData = [
             'totals' => [
                 'cells' => [
                     [],                     // Empty first cell
@@ -131,11 +132,9 @@ class MailPreviewCommand extends Command
             ],
         ];
 
-        $notification = new AdSenseNotification($reportData);
-        $mailMessage = $notification->toMail((object) []);
-
-        // Render the email HTML
-        $mailHtml = $mailMessage->render();
+        // Transform raw data to notification data
+        $notificationData = $transformer->toNotificationData($rawReportData);
+        $notification = new AdSenseNotification($notificationData);
 
         // Create storage directory if it doesn't exist
         $storageDir = storage_path('framework/testing');
