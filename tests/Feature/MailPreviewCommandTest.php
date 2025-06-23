@@ -13,7 +13,7 @@ class MailPreviewCommandTest extends TestCase
         $storageDir = storage_path('framework/testing');
         $jaFilePath = $storageDir.'/adsense-mail-preview-ja.html';
         $enFilePath = $storageDir.'/adsense-mail-preview-en.html';
-        
+
         if (file_exists($jaFilePath)) {
             unlink($jaFilePath);
         }
