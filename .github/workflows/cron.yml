@@ -2,6 +2,7 @@ name: cron
 
 on:
   #push:
+  workflow_dispatch:
   schedule:
     - cron: '0 */3 * * *' #UTC - every 3 hours
 
