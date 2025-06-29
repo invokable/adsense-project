@@ -214,6 +214,28 @@ file.
 
 ---
 
+### ✅ Step 3.5: Moving from "Testing" to "Production" Status
+
+1. After initial testing, you may want to move your app to production status for long-term use:
+   - Return to **APIs & Services > OAuth consent screen**
+   - At the top of the page, locate the **"Publishing status"** section
+   - Click **"PUBLISH APP"** button to change from "Testing" to "Production"
+2. **When to do this**:
+   - Production status removes the 7-day token expiration limitation of test mode
+   - Required if you need persistent access without re-authorization weekly
+   - Useful for long-running automated applications and scheduled tasks
+3. **Requirements**:
+   - Complete all required consent screen information
+   - If using sensitive or restricted scopes, prepare for Google verification
+   - Note: The AdSense readonly scope used here is classified as sensitive
+4. **Verification process**:
+   - If prompted, complete Google's verification process
+   - Provide additional information about your application's usage
+   - Verification can take several business days to complete
+5. Once in production status, your refresh tokens will not expire after 7 days and can be used indefinitely.
+
+---
+
 ### ✅ Step 4: Create OAuth Client ID
 
 1. Go to **APIs & Services > Credentials**.
