@@ -36,7 +36,8 @@ class AdSenseNotification extends Notification
     {
         $locale = config('app.locale', 'en');
         $template = $locale === 'ja' ? 'mail.ja.adsense-report' : 'mail.en.adsense-report';
-        $subject = $locale === 'ja' ? 'AdSense レポート（今月）' : 'AdSense Report (This Month)';
+        $currentDate = now()->format('Y/n/j');
+        $subject = $locale === 'ja' ? "AdSense レポート（{$currentDate}）" : "AdSense Report ({$currentDate})";
 
         return (new MailMessage)
             ->subject($subject)

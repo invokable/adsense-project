@@ -72,7 +72,8 @@ class AdSenseNotificationTest extends TestCase
         $mailMessage = $notification->toMail((object) []);
 
         $this->assertInstanceOf(MailMessage::class, $mailMessage);
-        $this->assertEquals('AdSense レポート（今月）', $mailMessage->subject);
+        $expectedDate = now()->format('Y/n/j');
+        $this->assertEquals("AdSense レポート（{$expectedDate}）", $mailMessage->subject);
 
         // Check that markdown template is being used
         $this->assertEquals('mail.ja.adsense-report', $mailMessage->markdown);
@@ -132,7 +133,8 @@ class AdSenseNotificationTest extends TestCase
         $mailMessage = $notification->toMail((object) []);
 
         $this->assertInstanceOf(MailMessage::class, $mailMessage);
-        $this->assertEquals('AdSense Report (This Month)', $mailMessage->subject);
+        $expectedDate = now()->format('Y/n/j');
+        $this->assertEquals("AdSense Report ({$expectedDate})", $mailMessage->subject);
         $this->assertEquals('mail.en.adsense-report', $mailMessage->markdown);
 
         // Check that keyMetrics is included in view data
