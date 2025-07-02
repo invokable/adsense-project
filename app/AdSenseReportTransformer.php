@@ -35,7 +35,7 @@ class AdSenseReportTransformer
             'thisMonth' => $totalMetrics['earnings'],
         ];
 
-        // Calculate yesterday's change compared to a week ago
+        // Calculate yesterday's change compared to a week ago (only if both data are available)
         $yesterdayChange = $this->calculateEarningsChange($yesterdayEarnings, $yesterdayWeekAgoEarnings);
 
         $recentDays = [];
@@ -117,8 +117,20 @@ class AdSenseReportTransformer
      */
     private function calculateEarningsChange(float $currentEarnings, float $previousEarnings): array
     {
+        // If no data for comparison week (e.g., early in the month), return null to hide comparison
+        if ($previousEarnings == 0 && $currentEarnings > 0) {
+            return [
+                'showComparison' => false,
+                'amount' => 0,
+                'percentage' => 0,
+                'direction' => 'neutral',
+            ];
+        }
+
+        // If both are 0, still don't show comparison
         if ($previousEarnings == 0) {
             return [
+                'showComparison' => false,
                 'amount' => $currentEarnings,
                 'percentage' => 0,
                 'direction' => $currentEarnings > 0 ? 'up' : 'neutral',
@@ -129,6 +141,7 @@ class AdSenseReportTransformer
         $percentage = ($change / $previousEarnings) * 100;
 
         return [
+            'showComparison' => true,
             'amount' => $change,
             'percentage' => $percentage,
             'direction' => $change > 0 ? 'up' : ($change < 0 ? 'down' : 'neutral'),
