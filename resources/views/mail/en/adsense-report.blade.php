@@ -1,7 +1,7 @@
 <x-mail::message>
-# AdSense Report (This Month)
+# AdSense Report
 
-Here's your monthly AdSense report.
+Here's your latest AdSense report.
 
 ## 📈 Key Metrics
 
