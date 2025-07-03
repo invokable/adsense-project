@@ -1,7 +1,7 @@
 <x-mail::message>
-# AdSense レポート（今月）
+# AdSense レポート
 
-今月のAdSenseレポートをお送りします。
+最新のAdSenseレポートをお送りします。
 
 ## 📈 重要指標
 
