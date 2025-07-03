@@ -32,7 +32,7 @@ Here's your monthly AdSense report.
 
 @foreach($recentDays as $day)
 **📅 {{ $day['date'] }}**
-　Earnings: ${{ number_format($day['earnings'], 2) }} | Page Views: {{ number_format($day['pageViews']) }} | Clicks: {{ number_format($day['clicks']) }} | CPC: ${{ number_format($day['cpc'], 2) }}
+ Earnings: ${{ number_format($day['earnings'], 2) }} | Page Views: {{ number_format($day['pageViews']) }} | Clicks: {{ number_format($day['clicks']) }} | CPC: ${{ number_format($day['cpc'], 2) }}
 
 @endforeach
 @endif
