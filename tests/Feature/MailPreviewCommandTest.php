@@ -2,18 +2,17 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class MailPreviewCommandTest extends TestCase
 {
     public function test_mail_preview_command_generates_html_files(): void
     {
-        // Clean up any existing preview files
         $storageDir = storage_path('framework/testing');
         $jaFilePath = $storageDir.'/adsense-mail-preview-ja.html';
         $enFilePath = $storageDir.'/adsense-mail-preview-en.html';
 
+        // Clean up any existing files
         if (file_exists($jaFilePath)) {
             unlink($jaFilePath);
         }

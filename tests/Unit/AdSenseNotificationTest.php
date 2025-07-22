@@ -15,9 +15,9 @@ class AdSenseNotificationTest extends TestCase
 
         Config::set('ads.metrics', [
             'PAGE_VIEWS',
-            'CLICKS',
-            'COST_PER_CLICK',
             'ESTIMATED_EARNINGS',
+            'INDIVIDUAL_AD_IMPRESSIONS',
+            'ACTIVE_VIEW_VIEWABILITY',
         ]);
     }
 
@@ -40,31 +40,34 @@ class AdSenseNotificationTest extends TestCase
             'totalMetrics' => [
                 'earnings' => 125.0,
                 'pageViews' => 1000.0,
-                'clicks' => 50.0,
-                'cpc' => 2.5,
+                'adImpressions' => 3000.0,
+                'viewability' => 0.755,
             ],
             'averageMetrics' => [
                 'earnings' => 17.9,
                 'pageViews' => 143.0,
-                'clicks' => 7.0,
-                'cpc' => 2.5,
+                'adImpressions' => 428.0,
+                'viewability' => 0.762,
             ],
             'recentDays' => [
                 [
                     'date' => '2023-12-01',
+                    'domain' => 'example.com',
                     'earnings' => 20.0,
                     'pageViews' => 150.0,
-                    'clicks' => 8.0,
-                    'cpc' => 2.5,
+                    'adImpressions' => 450.0,
+                    'viewability' => 0.781,
                 ],
                 [
                     'date' => '2023-12-02',
+                    'domain' => 'blog.example.com',
                     'earnings' => 30.0,
                     'pageViews' => 200.0,
-                    'clicks' => 10.0,
-                    'cpc' => 3.0,
+                    'adImpressions' => 600.0,
+                    'viewability' => 0.802,
                 ],
             ],
+            'domainBreakdown' => [],
             'reportDate' => '2023-12-03 12:00:00',
         ];
 
@@ -93,8 +96,8 @@ class AdSenseNotificationTest extends TestCase
         // Check total metrics
         $this->assertEquals(125.0, $viewData['totalMetrics']['earnings']);
         $this->assertEquals(1000.0, $viewData['totalMetrics']['pageViews']);
-        $this->assertEquals(50.0, $viewData['totalMetrics']['clicks']);
-        $this->assertEquals(2.5, $viewData['totalMetrics']['cpc']);
+        $this->assertEquals(3000.0, $viewData['totalMetrics']['adImpressions']);
+        $this->assertEquals(0.755, $viewData['totalMetrics']['viewability']);
     }
 
     public function test_to_mail_with_english_locale(): void
@@ -116,16 +119,17 @@ class AdSenseNotificationTest extends TestCase
             'totalMetrics' => [
                 'earnings' => 125.0,
                 'pageViews' => 1000.0,
-                'clicks' => 50.0,
-                'cpc' => 2.5,
+                'adImpressions' => 3000.0,
+                'viewability' => 75.5,
             ],
             'averageMetrics' => [
                 'earnings' => 17.9,
                 'pageViews' => 143.0,
-                'clicks' => 7.0,
-                'cpc' => 2.5,
+                'adImpressions' => 428.0,
+                'viewability' => 76.2,
             ],
             'recentDays' => [],
+            'domainBreakdown' => [],
             'reportDate' => '2023-12-03 12:00:00',
         ];
 

@@ -25,30 +25,33 @@ class AdSenseCommandTest extends TestCase
             ->willReturn([
                 'totals' => [
                     'cells' => [
-                        [],                   // Empty first cell
+                        [],                   // DATE dimension
+                        [],                   // DOMAIN_CODE dimension
                         ['value' => '1000'],  // PAGE_VIEWS
-                        ['value' => '50'],    // CLICKS
-                        ['value' => '2.5'],   // COST_PER_CLICK
                         ['value' => '125.0'], // ESTIMATED_EARNINGS
+                        ['value' => '3000'],  // INDIVIDUAL_AD_IMPRESSIONS
+                        ['value' => '0.755'], // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                     ],
                 ],
                 'averages' => [
                     'cells' => [
-                        [],                   // Empty first cell
+                        [],                   // DATE dimension
+                        [],                   // DOMAIN_CODE dimension
                         ['value' => '143'],   // PAGE_VIEWS
-                        ['value' => '7'],     // CLICKS
-                        ['value' => '2.5'],   // COST_PER_CLICK
                         ['value' => '17.9'],  // ESTIMATED_EARNINGS
+                        ['value' => '428'],   // INDIVIDUAL_AD_IMPRESSIONS
+                        ['value' => '0.762'], // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                     ],
                 ],
                 'rows' => [
                     [
                         'cells' => [
                             ['value' => '2023-12-01'],
+                            ['value' => 'example.com'],
                             ['value' => '150'],
-                            ['value' => '8'],
-                            ['value' => '2.5'],
                             ['value' => '20.0'],
+                            ['value' => '450'],
+                            ['value' => '0.781'], // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                         ],
                     ],
                 ],
@@ -72,16 +75,17 @@ class AdSenseCommandTest extends TestCase
                 'totalMetrics' => [
                     'earnings' => 125.0,
                     'pageViews' => 1000.0,
-                    'clicks' => 50.0,
-                    'cpc' => 2.5,
+                    'adImpressions' => 3000.0,
+                    'viewability' => 0.755,
                 ],
                 'averageMetrics' => [
                     'earnings' => 17.9,
                     'pageViews' => 143.0,
-                    'clicks' => 7.0,
-                    'cpc' => 2.5,
+                    'adImpressions' => 428.0,
+                    'viewability' => 0.762,
                 ],
                 'recentDays' => [],
+                'domainBreakdown' => [],
                 'reportDate' => '2023-12-03 12:00:00',
             ]);
 

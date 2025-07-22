@@ -71,7 +71,7 @@ class AdSenseReportTest extends TestCase
                     (object) ['value' => '1000'],   // PAGE_VIEWS
                     (object) ['value' => '125.0'],  // ESTIMATED_EARNINGS
                     (object) ['value' => '3000'],   // INDIVIDUAL_AD_IMPRESSIONS
-                    (object) ['value' => '75.5'],   // ACTIVE_VIEW_VIEWABILITY
+                    (object) ['value' => '0.755'],  // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                 ],
             ],
             'averages' => (object) [
@@ -81,7 +81,7 @@ class AdSenseReportTest extends TestCase
                     (object) ['value' => '143'],    // PAGE_VIEWS
                     (object) ['value' => '17.9'],   // ESTIMATED_EARNINGS
                     (object) ['value' => '428'],    // INDIVIDUAL_AD_IMPRESSIONS
-                    (object) ['value' => '76.2'],   // ACTIVE_VIEW_VIEWABILITY
+                    (object) ['value' => '0.762'],  // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                 ],
             ],
             'rows' => [
@@ -92,7 +92,7 @@ class AdSenseReportTest extends TestCase
                         (object) ['value' => '150'],
                         (object) ['value' => '20.0'],
                         (object) ['value' => '450'],
-                        (object) ['value' => '78.1'],
+                        (object) ['value' => '0.781'], // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                     ],
                 ],
             ],
