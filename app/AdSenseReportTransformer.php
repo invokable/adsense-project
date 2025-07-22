@@ -165,7 +165,7 @@ class AdSenseReportTransformer
         foreach ($rows as $row) {
             $domain = $row['cells'][1]['value'] ?? 'Unknown';
 
-            if (!isset($domains[$domain])) {
+            if (! isset($domains[$domain])) {
                 $domains[$domain] = [
                     'earnings' => 0,
                     'pageViews' => 0,
