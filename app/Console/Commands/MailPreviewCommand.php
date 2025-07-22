@@ -36,7 +36,7 @@ class MailPreviewCommand extends Command
                     ['value' => '5000'],    // PAGE_VIEWS
                     ['value' => '420.0'],   // ESTIMATED_EARNINGS
                     ['value' => '15000'],   // INDIVIDUAL_AD_IMPRESSIONS
-                    ['value' => '75.5'],    // ACTIVE_VIEW_VIEWABILITY
+                    ['value' => '0.755'],   // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                 ],
             ],
             'averages' => [
@@ -46,7 +46,7 @@ class MailPreviewCommand extends Command
                     ['value' => '714'],     // PAGE_VIEWS
                     ['value' => '60.0'],    // ESTIMATED_EARNINGS
                     ['value' => '2142'],    // INDIVIDUAL_AD_IMPRESSIONS
-                    ['value' => '78.2'],    // ACTIVE_VIEW_VIEWABILITY
+                    ['value' => '0.782'],   // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                 ],
             ],
             'rows' => [
@@ -57,7 +57,7 @@ class MailPreviewCommand extends Command
                         ['value' => '800'],
                         ['value' => '75.0'],
                         ['value' => '2400'],
-                        ['value' => '82.1'],
+                        ['value' => '0.821'],   // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                     ],
                 ],
                 [
@@ -67,7 +67,7 @@ class MailPreviewCommand extends Command
                         ['value' => '650'],
                         ['value' => '48.6'],
                         ['value' => '1950'],
-                        ['value' => '79.3'],
+                        ['value' => '0.793'],   // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                     ],
                 ],
                 [
@@ -77,7 +77,7 @@ class MailPreviewCommand extends Command
                         ['value' => '420'],
                         ['value' => '31.2'],
                         ['value' => '1260'],
-                        ['value' => '76.8'],
+                        ['value' => '0.768'],   // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                     ],
                 ],
                 [
@@ -87,7 +87,7 @@ class MailPreviewCommand extends Command
                         ['value' => '720'],
                         ['value' => '63.8'],
                         ['value' => '2160'],
-                        ['value' => '80.5'],
+                        ['value' => '0.805'],   // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                     ],
                 ],
                 [
@@ -97,7 +97,7 @@ class MailPreviewCommand extends Command
                         ['value' => '580'],
                         ['value' => '42.0'],
                         ['value' => '1740'],
-                        ['value' => '77.2'],
+                        ['value' => '0.772'],   // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                     ],
                 ],
                 [
@@ -107,7 +107,7 @@ class MailPreviewCommand extends Command
                         ['value' => '690'],
                         ['value' => '65.1'],
                         ['value' => '2070'],
-                        ['value' => '81.3'],
+                        ['value' => '0.813'],   // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                     ],
                 ],
                 [
@@ -117,7 +117,7 @@ class MailPreviewCommand extends Command
                         ['value' => '750'],
                         ['value' => '75.4'],
                         ['value' => '2250'],
-                        ['value' => '83.7'],
+                        ['value' => '0.837'],   // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                     ],
                 ],
                 [
@@ -127,7 +127,7 @@ class MailPreviewCommand extends Command
                         ['value' => '620'],
                         ['value' => '49.4'],
                         ['value' => '1860'],
-                        ['value' => '78.9'],
+                        ['value' => '0.789'],   // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                     ],
                 ],
                 [
@@ -137,7 +137,7 @@ class MailPreviewCommand extends Command
                         ['value' => '710'],
                         ['value' => '69.0'],
                         ['value' => '2130'],
-                        ['value' => '80.1'],
+                        ['value' => '0.801'],   // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                     ],
                 ],
                 [
@@ -147,7 +147,7 @@ class MailPreviewCommand extends Command
                         ['value' => '450'],
                         ['value' => '30.0'],  // This will show +18.6 (+62%) change
                         ['value' => '1350'],
-                        ['value' => '74.5'],
+                        ['value' => '0.745'],   // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                     ],
                 ],
             ],

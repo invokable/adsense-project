@@ -30,7 +30,7 @@ class AdSenseReportTransformerTest extends TestCase
                     ['value' => '1000'],  // PAGE_VIEWS
                     ['value' => '125.0'], // ESTIMATED_EARNINGS
                     ['value' => '3000'],  // INDIVIDUAL_AD_IMPRESSIONS
-                    ['value' => '75.5'],  // ACTIVE_VIEW_VIEWABILITY
+                    ['value' => '0.755'], // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                 ],
             ],
             'averages' => [
@@ -40,7 +40,7 @@ class AdSenseReportTransformerTest extends TestCase
                     ['value' => '143'],   // PAGE_VIEWS
                     ['value' => '17.9'],  // ESTIMATED_EARNINGS
                     ['value' => '428'],   // INDIVIDUAL_AD_IMPRESSIONS
-                    ['value' => '76.2'],  // ACTIVE_VIEW_VIEWABILITY
+                    ['value' => '0.762'], // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                 ],
             ],
             'rows' => [
@@ -51,7 +51,7 @@ class AdSenseReportTransformerTest extends TestCase
                         ['value' => '150'],
                         ['value' => '20.0'],
                         ['value' => '450'],
-                        ['value' => '78.1'],
+                        ['value' => '0.781'], // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                     ],
                 ],
                 [
@@ -61,7 +61,7 @@ class AdSenseReportTransformerTest extends TestCase
                         ['value' => '200'],
                         ['value' => '30.0'],
                         ['value' => '600'],
-                        ['value' => '80.2'],
+                        ['value' => '0.802'], // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                     ],
                 ],
             ],
@@ -104,7 +104,7 @@ class AdSenseReportTransformerTest extends TestCase
         $this->assertEquals(20.0, $result['recentDays'][0]['earnings']);
         $this->assertEquals(150.0, $result['recentDays'][0]['pageViews']);
         $this->assertEquals(450.0, $result['recentDays'][0]['adImpressions']);
-        $this->assertEquals(78.1, $result['recentDays'][0]['viewability']);
+        $this->assertEqualsWithDelta(78.1, $result['recentDays'][0]['viewability'], 0.001);
 
         // Check domain breakdown
         $this->assertArrayHasKey('domainBreakdown', $result);
@@ -129,7 +129,7 @@ class AdSenseReportTransformerTest extends TestCase
                     ['value' => '1000'],  // PAGE_VIEWS
                     ['value' => '125.0'], // ESTIMATED_EARNINGS
                     ['value' => '3000'],  // INDIVIDUAL_AD_IMPRESSIONS
-                    ['value' => '75.5'],  // ACTIVE_VIEW_VIEWABILITY
+                    ['value' => '0.755'], // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                 ],
             ],
             'averages' => [
@@ -139,7 +139,7 @@ class AdSenseReportTransformerTest extends TestCase
                     ['value' => '143'],   // PAGE_VIEWS
                     ['value' => '17.9'],  // ESTIMATED_EARNINGS
                     ['value' => '428'],   // INDIVIDUAL_AD_IMPRESSIONS
-                    ['value' => '76.2'],  // ACTIVE_VIEW_VIEWABILITY
+                    ['value' => '0.762'], // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                 ],
             ],
             'rows' => [],
@@ -166,7 +166,7 @@ class AdSenseReportTransformerTest extends TestCase
                     ['value' => '1000'],  // PAGE_VIEWS
                     ['value' => '125.0'], // ESTIMATED_EARNINGS
                     ['value' => '3000'],  // INDIVIDUAL_AD_IMPRESSIONS
-                    ['value' => '75.5'],  // ACTIVE_VIEW_VIEWABILITY
+                    ['value' => '0.755'], // ACTIVE_VIEW_VIEWABILITY (0-1 decimal)
                 ],
             ],
             // Missing averages and rows

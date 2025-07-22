@@ -13,14 +13,14 @@ class AdSenseReportTransformer
             'earnings' => $this->getMetricValue('ESTIMATED_EARNINGS', $rawReports),
             'pageViews' => $this->getMetricValue('PAGE_VIEWS', $rawReports),
             'adImpressions' => $this->getMetricValue('INDIVIDUAL_AD_IMPRESSIONS', $rawReports),
-            'viewability' => $this->getMetricValue('ACTIVE_VIEW_VIEWABILITY', $rawReports),
+            'viewability' => $this->getMetricValue('ACTIVE_VIEW_VIEWABILITY', $rawReports) * 100, // Convert to percentage
         ];
 
         $averageMetrics = [
             'earnings' => $this->getMetricValue('ESTIMATED_EARNINGS', $rawReports, 'averages'),
             'pageViews' => $this->getMetricValue('PAGE_VIEWS', $rawReports, 'averages'),
             'adImpressions' => $this->getMetricValue('INDIVIDUAL_AD_IMPRESSIONS', $rawReports, 'averages'),
-            'viewability' => $this->getMetricValue('ACTIVE_VIEW_VIEWABILITY', $rawReports, 'averages'),
+            'viewability' => $this->getMetricValue('ACTIVE_VIEW_VIEWABILITY', $rawReports, 'averages') * 100, // Convert to percentage
         ];
 
         // Get key daily metrics
@@ -48,7 +48,7 @@ class AdSenseReportTransformer
                     'earnings' => $this->getMetricValueFromRow('ESTIMATED_EARNINGS', $row),
                     'pageViews' => $this->getMetricValueFromRow('PAGE_VIEWS', $row),
                     'adImpressions' => $this->getMetricValueFromRow('INDIVIDUAL_AD_IMPRESSIONS', $row),
-                    'viewability' => $this->getMetricValueFromRow('ACTIVE_VIEW_VIEWABILITY', $row),
+                    'viewability' => $this->getMetricValueFromRow('ACTIVE_VIEW_VIEWABILITY', $row) * 100, // Convert to percentage
                 ];
             }
         }
@@ -171,6 +171,7 @@ class AdSenseReportTransformer
                     'pageViews' => 0,
                     'adImpressions' => 0,
                     'viewability' => 0,
+                    'count' => 0, // For calculating average viewability
                 ];
             }
 
@@ -178,11 +179,18 @@ class AdSenseReportTransformer
             $domains[$domain]['pageViews'] += $this->getMetricValueFromRow('PAGE_VIEWS', $row);
             $domains[$domain]['adImpressions'] += $this->getMetricValueFromRow('INDIVIDUAL_AD_IMPRESSIONS', $row);
 
-            // Viewabilityは平均値として計算（合計ではなく）
+            // Viewabilityは各行の値を蓄積して後で平均を取る
             $viewability = $this->getMetricValueFromRow('ACTIVE_VIEW_VIEWABILITY', $row);
-            if ($viewability > 0) {
-                $domains[$domain]['viewability'] = ($domains[$domain]['viewability'] + $viewability) / 2;
+            $domains[$domain]['viewability'] += $viewability;
+            $domains[$domain]['count']++;
+        }
+
+        // Calculate average viewability for each domain and convert to percentage
+        foreach ($domains as &$domain) {
+            if ($domain['count'] > 0) {
+                $domain['viewability'] = ($domain['viewability'] / $domain['count']) * 100; // Convert to percentage
             }
+            unset($domain['count']); // Remove count field from final result
         }
 
         // Sort by earnings descending
