@@ -14,9 +14,9 @@ class AdSenseReportTransformerTest extends TestCase
 
         Config::set('ads.metrics', [
             'PAGE_VIEWS',
-            'CLICKS',
-            'COST_PER_CLICK',
             'ESTIMATED_EARNINGS',
+            'INDIVIDUAL_AD_IMPRESSIONS',
+            'ACTIVE_VIEW_VIEWABILITY',
         ]);
     }
 
@@ -25,39 +25,43 @@ class AdSenseReportTransformerTest extends TestCase
         $rawReports = [
             'totals' => [
                 'cells' => [
-                    [],                   // Empty first cell
+                    [],                   // DATE dimension
+                    [],                   // DOMAIN_CODE dimension
                     ['value' => '1000'],  // PAGE_VIEWS
-                    ['value' => '50'],    // CLICKS
-                    ['value' => '2.5'],   // COST_PER_CLICK
                     ['value' => '125.0'], // ESTIMATED_EARNINGS
+                    ['value' => '3000'],  // INDIVIDUAL_AD_IMPRESSIONS
+                    ['value' => '75.5'],  // ACTIVE_VIEW_VIEWABILITY
                 ],
             ],
             'averages' => [
                 'cells' => [
-                    [],                   // Empty first cell
+                    [],                   // DATE dimension
+                    [],                   // DOMAIN_CODE dimension
                     ['value' => '143'],   // PAGE_VIEWS
-                    ['value' => '7'],     // CLICKS
-                    ['value' => '2.5'],   // COST_PER_CLICK
                     ['value' => '17.9'],  // ESTIMATED_EARNINGS
+                    ['value' => '428'],   // INDIVIDUAL_AD_IMPRESSIONS
+                    ['value' => '76.2'],  // ACTIVE_VIEW_VIEWABILITY
                 ],
             ],
             'rows' => [
                 [
                     'cells' => [
                         ['value' => '2023-12-01'],
+                        ['value' => 'example.com'],
                         ['value' => '150'],
-                        ['value' => '8'],
-                        ['value' => '2.5'],
                         ['value' => '20.0'],
+                        ['value' => '450'],
+                        ['value' => '78.1'],
                     ],
                 ],
                 [
                     'cells' => [
                         ['value' => '2023-12-02'],
+                        ['value' => 'blog.example.com'],
                         ['value' => '200'],
-                        ['value' => '10'],
-                        ['value' => '3.0'],
                         ['value' => '30.0'],
+                        ['value' => '600'],
+                        ['value' => '80.2'],
                     ],
                 ],
             ],
@@ -72,19 +76,20 @@ class AdSenseReportTransformerTest extends TestCase
         $this->assertArrayHasKey('totalMetrics', $result);
         $this->assertArrayHasKey('averageMetrics', $result);
         $this->assertArrayHasKey('recentDays', $result);
+        $this->assertArrayHasKey('domainBreakdown', $result);
         $this->assertArrayHasKey('reportDate', $result);
 
         // Check total metrics
         $this->assertEquals(125.0, $result['totalMetrics']['earnings']);
         $this->assertEquals(1000.0, $result['totalMetrics']['pageViews']);
-        $this->assertEquals(50.0, $result['totalMetrics']['clicks']);
-        $this->assertEquals(2.5, $result['totalMetrics']['cpc']);
+        $this->assertEquals(3000.0, $result['totalMetrics']['adImpressions']);
+        $this->assertEquals(75.5, $result['totalMetrics']['viewability']);
 
         // Check average metrics
         $this->assertEquals(17.9, $result['averageMetrics']['earnings']);
         $this->assertEquals(143.0, $result['averageMetrics']['pageViews']);
-        $this->assertEquals(7.0, $result['averageMetrics']['clicks']);
-        $this->assertEquals(2.5, $result['averageMetrics']['cpc']);
+        $this->assertEquals(428.0, $result['averageMetrics']['adImpressions']);
+        $this->assertEquals(76.2, $result['averageMetrics']['viewability']);
 
         // Check key metrics structure
         $this->assertArrayHasKey('today', $result['keyMetrics']);
@@ -95,8 +100,15 @@ class AdSenseReportTransformerTest extends TestCase
         // Check recent days
         $this->assertCount(2, $result['recentDays']);
         $this->assertEquals('2023-12-01', $result['recentDays'][0]['date']);
+        $this->assertEquals('example.com', $result['recentDays'][0]['domain']);
         $this->assertEquals(20.0, $result['recentDays'][0]['earnings']);
         $this->assertEquals(150.0, $result['recentDays'][0]['pageViews']);
+        $this->assertEquals(450.0, $result['recentDays'][0]['adImpressions']);
+        $this->assertEquals(78.1, $result['recentDays'][0]['viewability']);
+
+        // Check domain breakdown
+        $this->assertArrayHasKey('domainBreakdown', $result);
+        $this->assertIsArray($result['domainBreakdown']);
 
         // Check yesterdayChange structure
         $this->assertArrayHasKey('amount', $result['yesterdayChange']);
@@ -112,20 +124,22 @@ class AdSenseReportTransformerTest extends TestCase
         $rawReports = [
             'totals' => [
                 'cells' => [
-                    [],                   // Empty first cell
+                    [],                   // DATE dimension
+                    [],                   // DOMAIN_CODE dimension
                     ['value' => '1000'],  // PAGE_VIEWS
-                    ['value' => '50'],    // CLICKS
-                    ['value' => '2.5'],   // COST_PER_CLICK
                     ['value' => '125.0'], // ESTIMATED_EARNINGS
+                    ['value' => '3000'],  // INDIVIDUAL_AD_IMPRESSIONS
+                    ['value' => '75.5'],  // ACTIVE_VIEW_VIEWABILITY
                 ],
             ],
             'averages' => [
                 'cells' => [
-                    [],                   // Empty first cell
+                    [],                   // DATE dimension
+                    [],                   // DOMAIN_CODE dimension
                     ['value' => '143'],   // PAGE_VIEWS
-                    ['value' => '7'],     // CLICKS
-                    ['value' => '2.5'],   // COST_PER_CLICK
                     ['value' => '17.9'],  // ESTIMATED_EARNINGS
+                    ['value' => '428'],   // INDIVIDUAL_AD_IMPRESSIONS
+                    ['value' => '76.2'],  // ACTIVE_VIEW_VIEWABILITY
                 ],
             ],
             'rows' => [],
@@ -147,11 +161,12 @@ class AdSenseReportTransformerTest extends TestCase
         $rawReports = [
             'totals' => [
                 'cells' => [
-                    [],                   // Empty first cell
+                    [],                   // DATE dimension
+                    [],                   // DOMAIN_CODE dimension
                     ['value' => '1000'],  // PAGE_VIEWS
-                    ['value' => '50'],    // CLICKS
-                    ['value' => '2.5'],   // COST_PER_CLICK
                     ['value' => '125.0'], // ESTIMATED_EARNINGS
+                    ['value' => '3000'],  // INDIVIDUAL_AD_IMPRESSIONS
+                    ['value' => '75.5'],  // ACTIVE_VIEW_VIEWABILITY
                 ],
             ],
             // Missing averages and rows

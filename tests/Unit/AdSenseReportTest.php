@@ -23,9 +23,9 @@ class AdSenseReportTest extends TestCase
         Config::set('ads.refresh_token', 'test_refresh_token');
         Config::set('ads.metrics', [
             'PAGE_VIEWS',
-            'CLICKS',
-            'COST_PER_CLICK',
             'ESTIMATED_EARNINGS',
+            'INDIVIDUAL_AD_IMPRESSIONS',
+            'ACTIVE_VIEW_VIEWABILITY',
         ]);
     }
 
@@ -66,30 +66,33 @@ class AdSenseReportTest extends TestCase
         $mockReportData = (object) [
             'totals' => (object) [
                 'cells' => [
-                    (object) [],                   // Empty first cell
-                    (object) ['value' => '1000'],
-                    (object) ['value' => '50'],
-                    (object) ['value' => '2.5'],
-                    (object) ['value' => '125.0'],
+                    (object) [],                    // DATE dimension
+                    (object) [],                    // DOMAIN_CODE dimension
+                    (object) ['value' => '1000'],   // PAGE_VIEWS
+                    (object) ['value' => '125.0'],  // ESTIMATED_EARNINGS
+                    (object) ['value' => '3000'],   // INDIVIDUAL_AD_IMPRESSIONS
+                    (object) ['value' => '75.5'],   // ACTIVE_VIEW_VIEWABILITY
                 ],
             ],
             'averages' => (object) [
                 'cells' => [
-                    (object) [],                   // Empty first cell
-                    (object) ['value' => '143'],
-                    (object) ['value' => '7'],
-                    (object) ['value' => '2.5'],
-                    (object) ['value' => '17.9'],
+                    (object) [],                    // DATE dimension
+                    (object) [],                    // DOMAIN_CODE dimension
+                    (object) ['value' => '143'],    // PAGE_VIEWS
+                    (object) ['value' => '17.9'],   // ESTIMATED_EARNINGS
+                    (object) ['value' => '428'],    // INDIVIDUAL_AD_IMPRESSIONS
+                    (object) ['value' => '76.2'],   // ACTIVE_VIEW_VIEWABILITY
                 ],
             ],
             'rows' => [
                 (object) [
                     'cells' => [
                         (object) ['value' => '2023-12-01'],
+                        (object) ['value' => 'example.com'],
                         (object) ['value' => '150'],
-                        (object) ['value' => '8'],
-                        (object) ['value' => '2.5'],
                         (object) ['value' => '20.0'],
+                        (object) ['value' => '450'],
+                        (object) ['value' => '78.1'],
                     ],
                 ],
             ],
@@ -107,7 +110,7 @@ class AdSenseReportTest extends TestCase
                 'accounts/pub-1234567890',
                 Mockery::on(function ($params) {
                     return $params['metrics'] === config('ads.metrics')
-                        && $params['dimensions'] === 'DATE'
+                        && $params['dimensions'] === ['DATE', 'DOMAIN_CODE']
                         && $params['orderBy'] === '-DATE'
                         && $params['dateRange'] === 'MONTH_TO_DATE';
                 })
@@ -127,15 +130,15 @@ class AdSenseReportTest extends TestCase
         $this->assertArrayHasKey('rows', $result);
 
         // Check data structure
-        $this->assertEquals('1000', $result['totals']['cells'][1]['value']);
-        $this->assertEquals('125.0', $result['totals']['cells'][4]['value']);
+        $this->assertEquals('1000', $result['totals']['cells'][2]['value']);
+        $this->assertEquals('125.0', $result['totals']['cells'][3]['value']);
         $this->assertEquals('2023-12-01', $result['rows'][0]['cells'][0]['value']);
     }
 
     public function test_report_uses_correct_config_values(): void
     {
         // Override config for this test
-        Config::set('ads.metrics', ['PAGE_VIEWS', 'CLICKS']);
+        Config::set('ads.metrics', ['PAGE_VIEWS', 'ESTIMATED_EARNINGS']);
 
         Google::shouldReceive('setAccessToken')->once();
         Google::shouldReceive('fetchAccessTokenWithRefreshToken')->once();
@@ -161,7 +164,7 @@ class AdSenseReportTest extends TestCase
             ->with(
                 'accounts/test',
                 Mockery::on(function ($params) {
-                    return $params['metrics'] === ['PAGE_VIEWS', 'CLICKS'];
+                    return $params['metrics'] === ['PAGE_VIEWS', 'ESTIMATED_EARNINGS'];
                 })
             )
             ->andReturn($mockReportResponse);

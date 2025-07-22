@@ -12,15 +12,15 @@ class AdSenseReportTransformer
         $totalMetrics = [
             'earnings' => $this->getMetricValue('ESTIMATED_EARNINGS', $rawReports),
             'pageViews' => $this->getMetricValue('PAGE_VIEWS', $rawReports),
-            'clicks' => $this->getMetricValue('CLICKS', $rawReports),
-            'cpc' => $this->getMetricValue('COST_PER_CLICK', $rawReports),
+            'adImpressions' => $this->getMetricValue('INDIVIDUAL_AD_IMPRESSIONS', $rawReports),
+            'viewability' => $this->getMetricValue('ACTIVE_VIEW_VIEWABILITY', $rawReports),
         ];
 
         $averageMetrics = [
             'earnings' => $this->getMetricValue('ESTIMATED_EARNINGS', $rawReports, 'averages'),
             'pageViews' => $this->getMetricValue('PAGE_VIEWS', $rawReports, 'averages'),
-            'clicks' => $this->getMetricValue('CLICKS', $rawReports, 'averages'),
-            'cpc' => $this->getMetricValue('COST_PER_CLICK', $rawReports, 'averages'),
+            'adImpressions' => $this->getMetricValue('INDIVIDUAL_AD_IMPRESSIONS', $rawReports, 'averages'),
+            'viewability' => $this->getMetricValue('ACTIVE_VIEW_VIEWABILITY', $rawReports, 'averages'),
         ];
 
         // Get key daily metrics
@@ -44,13 +44,17 @@ class AdSenseReportTransformer
             foreach ($recentRows as $row) {
                 $recentDays[] = [
                     'date' => $row['cells'][0]['value'] ?? 'N/A',
+                    'domain' => $row['cells'][1]['value'] ?? 'N/A',
                     'earnings' => $this->getMetricValueFromRow('ESTIMATED_EARNINGS', $row),
                     'pageViews' => $this->getMetricValueFromRow('PAGE_VIEWS', $row),
-                    'clicks' => $this->getMetricValueFromRow('CLICKS', $row),
-                    'cpc' => $this->getMetricValueFromRow('COST_PER_CLICK', $row),
+                    'adImpressions' => $this->getMetricValueFromRow('INDIVIDUAL_AD_IMPRESSIONS', $row),
+                    'viewability' => $this->getMetricValueFromRow('ACTIVE_VIEW_VIEWABILITY', $row),
                 ];
             }
         }
+
+        // Calculate domain breakdown
+        $domainBreakdown = $this->calculateDomainBreakdown($rows);
 
         return [
             'keyMetrics' => $keyMetrics,
@@ -58,6 +62,7 @@ class AdSenseReportTransformer
             'totalMetrics' => $totalMetrics,
             'averageMetrics' => $averageMetrics,
             'recentDays' => $recentDays,
+            'domainBreakdown' => $domainBreakdown,
             'reportDate' => now()->format('Y-m-d H:i:s'),
         ];
     }
@@ -75,7 +80,7 @@ class AdSenseReportTransformer
         }
 
         $dataSource = $rawReports[$section] ?? [];
-        $value = $dataSource['cells'][$index + 1]['value'] ?? 0;
+        $value = $dataSource['cells'][$index + 2]['value'] ?? 0; // +2 because of DATE and DOMAIN_CODE dimensions
 
         return (float) $value;
     }
@@ -92,7 +97,7 @@ class AdSenseReportTransformer
             return 0;
         }
 
-        $value = $row['cells'][$index + 1]['value'] ?? 0;
+        $value = $row['cells'][$index + 2]['value'] ?? 0; // +2 because of DATE and DOMAIN_CODE dimensions
 
         return (float) $value;
     }
@@ -102,14 +107,16 @@ class AdSenseReportTransformer
      */
     private function findEarningsByDate(array $rows, string $targetDate): float
     {
+        $totalEarnings = 0;
+
         foreach ($rows as $row) {
             $date = $row['cells'][0]['value'] ?? '';
             if ($date === $targetDate) {
-                return $this->getMetricValueFromRow('ESTIMATED_EARNINGS', $row);
+                $totalEarnings += $this->getMetricValueFromRow('ESTIMATED_EARNINGS', $row);
             }
         }
 
-        return 0.0;
+        return $totalEarnings;
     }
 
     /**
@@ -146,5 +153,43 @@ class AdSenseReportTransformer
             'percentage' => $percentage,
             'direction' => $change > 0 ? 'up' : ($change < 0 ? 'down' : 'neutral'),
         ];
+    }
+
+    /**
+     * Calculate domain breakdown from rows data
+     */
+    private function calculateDomainBreakdown(array $rows): array
+    {
+        $domains = [];
+
+        foreach ($rows as $row) {
+            $domain = $row['cells'][1]['value'] ?? 'Unknown';
+
+            if (!isset($domains[$domain])) {
+                $domains[$domain] = [
+                    'earnings' => 0,
+                    'pageViews' => 0,
+                    'adImpressions' => 0,
+                    'viewability' => 0,
+                ];
+            }
+
+            $domains[$domain]['earnings'] += $this->getMetricValueFromRow('ESTIMATED_EARNINGS', $row);
+            $domains[$domain]['pageViews'] += $this->getMetricValueFromRow('PAGE_VIEWS', $row);
+            $domains[$domain]['adImpressions'] += $this->getMetricValueFromRow('INDIVIDUAL_AD_IMPRESSIONS', $row);
+
+            // Viewabilityは平均値として計算（合計ではなく）
+            $viewability = $this->getMetricValueFromRow('ACTIVE_VIEW_VIEWABILITY', $row);
+            if ($viewability > 0) {
+                $domains[$domain]['viewability'] = ($domains[$domain]['viewability'] + $viewability) / 2;
+            }
+        }
+
+        // Sort by earnings descending
+        uasort($domains, function ($a, $b) {
+            return $b['earnings'] <=> $a['earnings'];
+        });
+
+        return $domains;
     }
 }

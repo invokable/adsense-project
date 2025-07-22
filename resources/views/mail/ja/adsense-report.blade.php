@@ -17,22 +17,32 @@
 
 **収益:** ¥{{ number_format($totalMetrics['earnings']) }}  
 **ページビュー:** {{ number_format($totalMetrics['pageViews']) }}  
-**クリック数:** {{ number_format($totalMetrics['clicks']) }}  
-**CPC:** ¥{{ number_format($totalMetrics['cpc']) }}
+**広告表示回数:** {{ number_format($totalMetrics['adImpressions']) }}  
+**ビューアビリティ:** {{ number_format($totalMetrics['viewability'], 1) }}%
 
 ## 日平均実績
 
 **収益:** ¥{{ number_format($averageMetrics['earnings']) }}  
 **ページビュー:** {{ number_format($averageMetrics['pageViews']) }}  
-**クリック数:** {{ number_format($averageMetrics['clicks']) }}  
-**CPC:** ¥{{ number_format($averageMetrics['cpc']) }}
+**広告表示回数:** {{ number_format($averageMetrics['adImpressions']) }}  
+**ビューアビリティ:** {{ number_format($averageMetrics['viewability'], 1) }}%
+
+@if(isset($domainBreakdown) && count($domainBreakdown) > 0)
+## ドメイン別実績
+
+@foreach($domainBreakdown as $domain => $metrics)
+**🌐 {{ $domain }}**  
+　収益: ¥{{ number_format($metrics['earnings']) }} | ページビュー: {{ number_format($metrics['pageViews']) }} | 広告表示: {{ number_format($metrics['adImpressions']) }} | ビューアビリティ: {{ number_format($metrics['viewability'], 1) }}%
+
+@endforeach
+@endif
 
 @if(isset($recentDays) && count($recentDays) > 0)
 ## 日別詳細（直近7日）
 
 @foreach($recentDays as $day)
-**📅 {{ $day['date'] }}**  
-　収益: ¥{{ number_format($day['earnings']) }} | ページビュー: {{ number_format($day['pageViews']) }} | クリック数: {{ number_format($day['clicks']) }} | CPC: ¥{{ number_format($day['cpc']) }}
+**📅 {{ $day['date'] }} ({{ $day['domain'] }})**  
+　収益: ¥{{ number_format($day['earnings']) }} | ページビュー: {{ number_format($day['pageViews']) }} | 広告表示: {{ number_format($day['adImpressions']) }} | ビューアビリティ: {{ number_format($day['viewability'], 1) }}%
 
 @endforeach
 @endif

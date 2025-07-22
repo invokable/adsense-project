@@ -17,22 +17,32 @@ Here's your latest AdSense report.
 
 **Earnings:** ${{ number_format($totalMetrics['earnings'], 2) }}  
 **Page Views:** {{ number_format($totalMetrics['pageViews']) }}  
-**Clicks:** {{ number_format($totalMetrics['clicks']) }}  
-**CPC:** ${{ number_format($totalMetrics['cpc'], 2) }}
+**Ad Impressions:** {{ number_format($totalMetrics['adImpressions']) }}  
+**Viewability:** {{ number_format($totalMetrics['viewability'], 1) }}%
 
 ## Daily Average Performance
 
 **Earnings:** ${{ number_format($averageMetrics['earnings'], 2) }}  
 **Page Views:** {{ number_format($averageMetrics['pageViews']) }}  
-**Clicks:** {{ number_format($averageMetrics['clicks']) }}  
-**CPC:** ${{ number_format($averageMetrics['cpc'], 2) }}
+**Ad Impressions:** {{ number_format($averageMetrics['adImpressions']) }}  
+**Viewability:** {{ number_format($averageMetrics['viewability'], 1) }}%
+
+@if(isset($domainBreakdown) && count($domainBreakdown) > 0)
+## Domain Breakdown
+
+@foreach($domainBreakdown as $domain => $metrics)
+**🌐 {{ $domain }}**  
+ Earnings: ${{ number_format($metrics['earnings'], 2) }} | Page Views: {{ number_format($metrics['pageViews']) }} | Ad Impressions: {{ number_format($metrics['adImpressions']) }} | Viewability: {{ number_format($metrics['viewability'], 1) }}%
+
+@endforeach
+@endif
 
 @if(isset($recentDays) && count($recentDays) > 0)
 ## Daily Details (Recent 7 Days)
 
 @foreach($recentDays as $day)
-**📅 {{ $day['date'] }}**  
- Earnings: ${{ number_format($day['earnings'], 2) }} | Page Views: {{ number_format($day['pageViews']) }} | Clicks: {{ number_format($day['clicks']) }} | CPC: ${{ number_format($day['cpc'], 2) }}
+**📅 {{ $day['date'] }} ({{ $day['domain'] }})**  
+ Earnings: ${{ number_format($day['earnings'], 2) }} | Page Views: {{ number_format($day['pageViews']) }} | Ad Impressions: {{ number_format($day['adImpressions']) }} | Viewability: {{ number_format($day['viewability'], 1) }}%
 
 @endforeach
 @endif

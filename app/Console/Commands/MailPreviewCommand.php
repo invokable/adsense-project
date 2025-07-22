@@ -31,102 +31,123 @@ class MailPreviewCommand extends Command
         $rawReportData = [
             'totals' => [
                 'cells' => [
-                    [],                     // Empty first cell
+                    [],                     // DATE dimension
+                    [],                     // DOMAIN_CODE dimension
                     ['value' => '5000'],    // PAGE_VIEWS
-                    ['value' => '150'],     // CLICKS
-                    ['value' => '2.8'],     // COST_PER_CLICK
                     ['value' => '420.0'],   // ESTIMATED_EARNINGS
+                    ['value' => '15000'],   // INDIVIDUAL_AD_IMPRESSIONS
+                    ['value' => '75.5'],    // ACTIVE_VIEW_VIEWABILITY
                 ],
             ],
             'averages' => [
                 'cells' => [
-                    [],                     // Empty first cell
+                    [],                     // DATE dimension
+                    [],                     // DOMAIN_CODE dimension
                     ['value' => '714'],     // PAGE_VIEWS
-                    ['value' => '21'],      // CLICKS
-                    ['value' => '2.8'],     // COST_PER_CLICK
                     ['value' => '60.0'],    // ESTIMATED_EARNINGS
+                    ['value' => '2142'],    // INDIVIDUAL_AD_IMPRESSIONS
+                    ['value' => '78.2'],    // ACTIVE_VIEW_VIEWABILITY
                 ],
             ],
             'rows' => [
                 [
                     'cells' => [
                         ['value' => now()->format('Y-m-d')],  // Today
+                        ['value' => 'example.com'],
                         ['value' => '800'],
-                        ['value' => '25'],
-                        ['value' => '3.0'],
                         ['value' => '75.0'],
+                        ['value' => '2400'],
+                        ['value' => '82.1'],
                     ],
                 ],
                 [
                     'cells' => [
                         ['value' => now()->subDay()->format('Y-m-d')],  // Yesterday
+                        ['value' => 'example.com'],
                         ['value' => '650'],
-                        ['value' => '18'],
-                        ['value' => '2.7'],
                         ['value' => '48.6'],
+                        ['value' => '1950'],
+                        ['value' => '79.3'],
+                    ],
+                ],
+                [
+                    'cells' => [
+                        ['value' => now()->subDay()->format('Y-m-d')],  // Yesterday
+                        ['value' => 'blog.example.com'],
+                        ['value' => '420'],
+                        ['value' => '31.2'],
+                        ['value' => '1260'],
+                        ['value' => '76.8'],
                     ],
                 ],
                 [
                     'cells' => [
                         ['value' => now()->subDays(2)->format('Y-m-d')],
+                        ['value' => 'example.com'],
                         ['value' => '720'],
-                        ['value' => '22'],
-                        ['value' => '2.9'],
                         ['value' => '63.8'],
+                        ['value' => '2160'],
+                        ['value' => '80.5'],
                     ],
                 ],
                 [
                     'cells' => [
                         ['value' => now()->subDays(3)->format('Y-m-d')],
+                        ['value' => 'example.com'],
                         ['value' => '580'],
-                        ['value' => '15'],
-                        ['value' => '2.8'],
                         ['value' => '42.0'],
+                        ['value' => '1740'],
+                        ['value' => '77.2'],
                     ],
                 ],
                 [
                     'cells' => [
                         ['value' => now()->subDays(4)->format('Y-m-d')],
+                        ['value' => 'blog.example.com'],
                         ['value' => '690'],
-                        ['value' => '21'],
-                        ['value' => '3.1'],
                         ['value' => '65.1'],
+                        ['value' => '2070'],
+                        ['value' => '81.3'],
                     ],
                 ],
                 [
                     'cells' => [
                         ['value' => now()->subDays(5)->format('Y-m-d')],
+                        ['value' => 'example.com'],
                         ['value' => '750'],
-                        ['value' => '26'],
-                        ['value' => '2.9'],
                         ['value' => '75.4'],
+                        ['value' => '2250'],
+                        ['value' => '83.7'],
                     ],
                 ],
                 [
                     'cells' => [
                         ['value' => now()->subDays(6)->format('Y-m-d')],
+                        ['value' => 'example.com'],
                         ['value' => '620'],
-                        ['value' => '19'],
-                        ['value' => '2.6'],
                         ['value' => '49.4'],
+                        ['value' => '1860'],
+                        ['value' => '78.9'],
                     ],
                 ],
                 [
                     'cells' => [
                         ['value' => now()->subDays(7)->format('Y-m-d')],
+                        ['value' => 'blog.example.com'],
                         ['value' => '710'],
-                        ['value' => '23'],
-                        ['value' => '3.0'],
                         ['value' => '69.0'],
+                        ['value' => '2130'],
+                        ['value' => '80.1'],
                     ],
                 ],
                 [
                     'cells' => [
                         ['value' => now()->subDays(8)->format('Y-m-d')],  // Yesterday week ago
+                        ['value' => 'example.com'],
                         ['value' => '450'],
-                        ['value' => '12'],
-                        ['value' => '2.5'],
                         ['value' => '30.0'],  // This will show +18.6 (+62%) change
+                        ['value' => '1350'],
+                        ['value' => '74.5'],
                     ],
                 ],
             ],

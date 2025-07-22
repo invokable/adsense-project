@@ -6,8 +6,6 @@ return [
 
     'metrics' => [
         'PAGE_VIEWS',
-//        'CLICKS',
-//        'COST_PER_CLICK',
         'ESTIMATED_EARNINGS',
         'INDIVIDUAL_AD_IMPRESSIONS',
         'ACTIVE_VIEW_VIEWABILITY',
