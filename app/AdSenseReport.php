@@ -31,7 +31,7 @@ class AdSenseReport
 
         $optParams = [
             'metrics' => config('ads.metrics'),
-            'dimensions' => 'DATE',
+            'dimensions' => ['DATE', 'DOMAIN_CODE'],
             'orderBy' => '-DATE',
             'dateRange' => 'MONTH_TO_DATE',
         ];
