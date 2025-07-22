@@ -30,6 +30,7 @@ class AdSenseCommand extends Command
     public function handle(AdSenseReport $adsense, AdSenseReportTransformer $transformer): int
     {
         $rawReports = $adsense->report();
+        //dd($rawReports);
         $notificationData = $transformer->toNotificationData($rawReports);
 
         Notification::route('mail', [config('mail.to.address') => config('mail.to.name')])
