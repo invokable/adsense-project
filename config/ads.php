@@ -9,7 +9,7 @@ return [
 //        'CLICKS',
 //        'COST_PER_CLICK',
         'ESTIMATED_EARNINGS',
-        'IMPRESSIONS',
+        'INDIVIDUAL_AD_IMPRESSIONS',
         'ACTIVE_VIEW_VIEWABILITY',
     ],
 ];
