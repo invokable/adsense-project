@@ -40,7 +40,7 @@ class AdSenseReportTransformer
 
         $recentDays = [];
         if (isset($rawReports['rows']) && count($rawReports['rows']) > 0) {
-            $recentRows = array_slice($rawReports['rows'], 0, 7);
+            $recentRows = array_slice($rawReports['rows'], 0, 14);
             foreach ($recentRows as $row) {
                 $recentDays[] = [
                     'date' => $row['cells'][0]['value'] ?? 'N/A',
