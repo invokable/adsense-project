@@ -1,5 +1,7 @@
 <?php
 
+use Google\Service\Adsense;
+
 return [
     /*
     |----------------------------------------------------------------------------
@@ -20,7 +22,7 @@ return [
     'client_id' => env('GOOGLE_CLIENT_ID', ''),
     'client_secret' => env('GOOGLE_CLIENT_SECRET', ''),
     'redirect_uri' => env('GOOGLE_REDIRECT', ''),
-    'scopes' => [\Google\Service\Adsense::ADSENSE_READONLY],
+    'scopes' => [Adsense::ADSENSE_READONLY],
     'access_type' => 'offline',
     'prompt' => 'consent select_account',
 
