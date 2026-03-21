@@ -15,7 +15,7 @@ This project is a sample implementation for sending Google AdSense revenue repor
 
 ## 🛠 Tech Stack
 
-- **Framework**: Laravel 12.0 (Console Application)
+- **Framework**: Laravel 13.0 (Console Application)
 - **Language**: PHP 8.4
 - **API Integration**: Google AdSense Management API
 - **Authentication**: OAuth 2.0 with automatic token refresh

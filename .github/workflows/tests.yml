@@ -21,12 +21,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.4
+          php-version: latest
           coverage: xdebug
 
       - name: Install Dependencies
@@ -42,7 +42,7 @@ jobs:
         run: php artisan test
 
       - name: Code Coverage
-        uses: qltysh/qlty-action/coverage@v1
+        uses: qltysh/qlty-action/coverage@v2
         with:
           oidc: true
           files: build/logs/clover.xml
