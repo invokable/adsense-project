@@ -868,16 +868,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.436.0",
+            "version": "v0.437.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "42493f9565963a0456b1edace1eb5f1cc53f2f73"
+                "reference": "1a7dd2368adb7ee4d5d07f828ae2dd7ecc43247c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/42493f9565963a0456b1edace1eb5f1cc53f2f73",
-                "reference": "42493f9565963a0456b1edace1eb5f1cc53f2f73",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/1a7dd2368adb7ee4d5d07f828ae2dd7ecc43247c",
+                "reference": "1a7dd2368adb7ee4d5d07f828ae2dd7ecc43247c",
                 "shasum": ""
             },
             "require": {
@@ -906,9 +906,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.436.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.437.0"
             },
-            "time": "2026-04-06T01:28:26+00:00"
+            "time": "2026-04-13T01:26:28+00:00"
         },
         {
             "name": "google/auth",
@@ -7656,16 +7656,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "12.5.3",
+            "version": "12.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "b015312f28dd75b75d3422ca37dff2cd1a565e8d"
+                "reference": "e70f9f8870918ec31991d69133385964834f9c5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/b015312f28dd75b75d3422ca37dff2cd1a565e8d",
-                "reference": "b015312f28dd75b75d3422ca37dff2cd1a565e8d",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/e70f9f8870918ec31991d69133385964834f9c5a",
+                "reference": "e70f9f8870918ec31991d69133385964834f9c5a",
                 "shasum": ""
             },
             "require": {
@@ -7674,7 +7674,6 @@
                 "ext-xmlwriter": "*",
                 "nikic/php-parser": "^5.7.0",
                 "php": ">=8.3",
-                "phpunit/php-file-iterator": "^6.0",
                 "phpunit/php-text-template": "^5.0",
                 "sebastian/complexity": "^5.0",
                 "sebastian/environment": "^8.0.3",
@@ -7721,7 +7720,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/12.5.3"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/12.5.4"
             },
             "funding": [
                 {
@@ -7741,7 +7740,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-06T06:01:44+00:00"
+            "time": "2026-04-12T05:05:15+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
