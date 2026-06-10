@@ -4,7 +4,7 @@ on:
   #push:
   workflow_dispatch:
   schedule:
-    - cron: '5 * * * *' #UTC - every 3 hours
+    - cron: '5 * * * *' #UTC
 
 jobs:
   cron:
