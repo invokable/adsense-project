@@ -48,3 +48,4 @@ jobs:
           ADS_REFRESH_TOKEN: ${{ secrets.ADS_REFRESH_TOKEN }}
           APP_NAME: ${{ secrets.APP_NAME }}
           APP_LOCALE: ${{ secrets.APP_LOCALE }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}

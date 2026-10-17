@@ -9,5 +9,10 @@
     "packages": [
         "revolution/laravel-boost-copilot-cli"
     ],
-    "sail": false
+    "sail": false,
+    "skills": [
+        "infer-conventions",
+        "laravel-best-practices",
+        "testing-best-practices"
+    ]
 }

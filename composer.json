@@ -13,6 +13,7 @@
         "aws/aws-sdk-php": "^3.344",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
+        "resend/resend-php": "*",
         "revolution/laravel-google-sheets": "^7.1"
     },
     "require-dev": {
